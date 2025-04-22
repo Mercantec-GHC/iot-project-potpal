@@ -1,0 +1,67 @@
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+
+# .NET build
+bin/
+obj/
+artifacts/
+*.dll
+*.exe
+*.pdb
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.assets.json
+
+# Configuration and secrets
+appsettings.*.json
+appsettings.json
+secrets.json
+*.env
+
+# Entity Framework
+Migrations/
+
+# Arduino
+*.hex
+*.elf
+*.bin
+*.ino.*
+*.cpp.*
+*.o
+
+# Frontend (Chart.js or Blazor)
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+
+# Blazor WebAssembly
+wwwroot/css/app.css
+wwwroot/js/*.js
+*.client.csproj.user
+
+# Local database files
+*.db
+*.db-shm
+*.db-wal
+
+# Test results
+TestResults/
+
+# Misc
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
