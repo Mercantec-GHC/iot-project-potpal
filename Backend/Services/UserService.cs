@@ -14,6 +14,18 @@ public class UserService(UserRepo userRepo)
     {
         return await _userRepo.GetByIdAsync(id);
     }
+
+
+    public async Task<IEnumerable<User>> GetAllAsync()
+    {
+        return await _userRepo.GetAllAsync();
+    }
+
+
+    public async Task AddAsync(User user)
+    {
+        await _userRepo.AddAsync(user);
+    }
    
     
 }

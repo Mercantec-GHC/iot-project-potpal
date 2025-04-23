@@ -17,13 +17,30 @@ public class UserController : Controller
         _userService = userService;
 
     }
-    
-       
-    
-    
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetUserById(int id)
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var user = await _userService.GetAllAsync();
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
+
+    [HttpGet("{token}")]
+    public async Task<IActionResult> GetUserByToken(string token)
+    {
+        var user = await _userService.GetByTokenAsync(token);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
+    
+    [HttpPost]public async Task<IActionResult> AddUserAsync(int id)
     {
         var user = await _userService.GetByIdAsync(id);
         if (user == null)
@@ -32,6 +49,5 @@ public class UserController : Controller
         }
         return Ok(user);
     }
-
     
 }
