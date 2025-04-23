@@ -30,9 +30,9 @@ public class PlantController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPlantById(int id)
+    public async Task<IActionResult> GetPlantByGuid(string guid)
     {
-        var plant = await _plantService.GetByIdAsync(id);
+        var plant = await _plantService.GetByGuidAsync(guid);
         if (plant == null)
         {
             return NotFound();
@@ -41,9 +41,9 @@ public class PlantController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddPlantAsync(int id)
+    public async Task<IActionResult> AddPlantAsync(Plant plant)
     {
-        var plant = await _plantService.GetByIdAsync(id);
+        await _plantService.AddAsync(plant);
         if (plant == null)
         {
             return NotFound();
@@ -51,4 +51,16 @@ public class PlantController : Controller
         return Ok(plant);
     }
     
+    [HttpPut("{GUID}")]
+    public async Task<IActionResult> UpdatePlantAsync(string GUID, Plant plant)
+    {
+        var existingPlant = await _plantService.GetByGuidAsync(GUID);
+        if (existingPlant == null)
+        {
+            return NotFound();
+        }
+
+        await _plantService.UpdateAsync(plant);
+        return Ok(plant);
+    }
 }

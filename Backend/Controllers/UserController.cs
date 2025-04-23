@@ -29,10 +29,10 @@ public class UserController : Controller
         return Ok(user);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetUserById(int id)
+    [HttpGet("{token}")]
+    public async Task<IActionResult> GetUserByToken(string token)
     {
-        var user = await _userService.GetByIdAsync(id);
+        var user = await _userService.GetByTokenAsync(token);
         if (user == null)
         {
             return NotFound();

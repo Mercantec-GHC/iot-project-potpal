@@ -11,9 +11,9 @@ public class PlantRepo
         _dbContext = dbContext;
     }
 
-    public async Task<Plant?> GetByIdAsync(int id)
+    public async Task<Plant?> GetByGuidAsync(string guid)
     {
-        return await _dbContext.Plants.FindAsync(id);
+        return await _dbContext.Plants.FindAsync(guid);
     }
 
     public async Task<IEnumerable<Plant>> GetAllAsync()
@@ -24,6 +24,12 @@ public class PlantRepo
     public async Task AddAsync(Plant plant)
     {
         await _dbContext.Plants.AddAsync(plant);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Plant plant)
+    {
+        _dbContext.Plants.Update(plant);
         await _dbContext.SaveChangesAsync();
     }
 }

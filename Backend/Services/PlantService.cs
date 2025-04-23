@@ -10,9 +10,9 @@ public class PlantService(PlantRepo plantRepo)
     private readonly PlantRepo _plantRepo = plantRepo;
 
 
-    public async Task<Plant?> GetByIdAsync(int id)
+    public async Task<Plant?> GetByGuidAsync(string guid)
     {
-        return await _plantRepo.GetByIdAsync(id);
+        return await _plantRepo.GetByGuidAsync(guid);
     }
 
 
@@ -27,5 +27,8 @@ public class PlantService(PlantRepo plantRepo)
         await _plantRepo.AddAsync(plant);
     }
    
-    
+    public async Task UpdateAsync(Plant plant)
+    {
+        await _plantRepo.UpdateAsync(plant);
+    }
 }
