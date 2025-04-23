@@ -18,10 +18,10 @@ public class UserController : Controller
 
     }
 
-    [HttpGet()]
+    [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
-        var user = await _userService.GetByIdAsync(id);
+        var user = await _userService.GetAllAsync();
         if (user == null)
         {
             return NotFound();
@@ -39,6 +39,15 @@ public class UserController : Controller
         }
         return Ok(user);
     }
-
+    
+    [HttpPost]public async Task<IActionResult> AddUserAsync(int id)
+    {
+        var user = await _userService.GetByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
     
 }

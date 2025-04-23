@@ -2,29 +2,29 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-public class UserService(UserRepo userRepo)
+public class PlantService(PlantRepo plantRepo)
 {
   
 
 
-    private readonly UserRepo _userRepo = userRepo;
+    private readonly PlantRepo _plantRepo = plantRepo;
 
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<Plant?> GetByIdAsync(int id)
     {
-        return await _userRepo.GetByIdAsync(id);
+        return await _plantRepo.GetByIdAsync(id);
     }
 
 
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<IEnumerable<Plant>> GetAllAsync()
     {
-        return await _userRepo.GetAllAsync();
+        return await _plantRepo.GetAllAsync();
     }
 
 
-    public async Task AddAsync(User user)
+    public async Task AddAsync(Plant plant)
     {
-        await _userRepo.AddAsync(user);
+        await _plantRepo.AddAsync(plant);
     }
    
     
