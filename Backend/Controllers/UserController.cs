@@ -17,10 +17,17 @@ public class UserController : Controller
         _userService = userService;
 
     }
-    
-       
-    
-    
+
+    [HttpGet()]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var user = await _userService.GetByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id)
