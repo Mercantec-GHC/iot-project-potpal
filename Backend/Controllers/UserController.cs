@@ -40,9 +40,9 @@ public class UserController : Controller
         return Ok(user);
     }
     
-    [HttpPost]public async Task<IActionResult> AddUserAsync(int id)
+    [HttpPost]public async Task<IActionResult> AddUserAsync(User user)
     {
-        var user = await _userService.GetByIdAsync(id);
+        await _userService.AddAsync(user);
         if (user == null)
         {
             return NotFound();

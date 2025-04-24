@@ -5,7 +5,7 @@ namespace Models;
 public class Plant
 {
     [Key]
-    public int Id { get; set; }
+    public string GUID { get; set; } = "";
     public string Name { get; set; } = "";
     public float IdealSoilMoisture { get; set; }
     public float IdealTemperature { get; set; }

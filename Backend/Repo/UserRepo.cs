@@ -11,9 +11,9 @@ public class UserRepo
         _dbContext = dbContext;
     }
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<User?> GetByTokenAsync(string token)
     {
-        return await _dbContext.Users.FindAsync(id);
+        return await _dbContext.Users.FindAsync(token);
     }
 
     public async Task<IEnumerable<User>> GetAllAsync()

@@ -10,9 +10,9 @@ public class UserService(UserRepo userRepo)
     private readonly UserRepo _userRepo = userRepo;
 
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<User?> GetByTokenAsync(string token)
     {
-        return await _userRepo.GetByIdAsync(id);
+        return await _userRepo.GetByTokenAsync(token);
     }
 
 

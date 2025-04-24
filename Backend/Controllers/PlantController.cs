@@ -29,7 +29,7 @@ public class PlantController : Controller
         return Ok(plant);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{guid}")]
     public async Task<IActionResult> GetPlantByGuid(string guid)
     {
         var plant = await _plantService.GetByGuidAsync(guid);
@@ -51,7 +51,7 @@ public class PlantController : Controller
         return Ok(plant);
     }
     
-    [HttpPut("{GUID}")]
+    [HttpPut("{guid}")]
     public async Task<IActionResult> UpdatePlantAsync(string GUID, Plant plant)
     {
         var existingPlant = await _plantService.GetByGuidAsync(GUID);
