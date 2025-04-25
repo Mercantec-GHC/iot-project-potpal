@@ -1,0 +1,28 @@
+﻿<div class="plant-box">
+    <h3>@Name</h3>
+    <div class="content">
+        <div class="plant-container">
+            <div class="plant-item">@Humidity</div>
+            <div class="plant-item">@Moisture</div>
+            <div class="plant-item">@Temperature</div>
+            <div class="plant-item">@LightLevel</div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Name { get; set; } = "Name";
+
+    [Parameter]
+    public string Humidity { get; set; } = "Humidity";
+
+    [Parameter]
+    public string Moisture { get; set; } = "Moisture";
+
+    [Parameter]
+    public string Temperature { get; set; } = "Temperature";
+
+    [Parameter]
+    public string LightLevel { get; set; } = "Light level";
+}
