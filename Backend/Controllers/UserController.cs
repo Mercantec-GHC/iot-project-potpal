@@ -40,14 +40,26 @@ public class UserController : Controller
         return Ok(user);
     }
     
-    [HttpPost]public async Task<IActionResult> AddUserAsync(User user)
+    [HttpPost]
+    public async Task<IActionResult> AddUserAsync(CreateUserDTO createUser)
     {
-        await _userService.AddAsync(user);
+        UserDTO NewUser = await _userService.AddAsync(createUser);
+        if (NewUser == null)
+        {
+            return NotFound();
+        }
+        return Ok(NewUser);
+    }
+
+    [HttpPost("Login")]
+    public async Task<IActionResult> LoginAsync(UserLoginDTO LoginUser)
+    {
+        UserDTO user = await _userService.LoginAsync(LoginUser);
         if (user == null)
         {
             return NotFound();
         }
         return Ok(user);
     }
-    
+
 }
