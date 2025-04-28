@@ -4,7 +4,7 @@ using Models;
 
 public class UserService(UserRepo userRepo)
 {
-  
+
 
 
     private readonly UserRepo _userRepo = userRepo;
@@ -22,10 +22,17 @@ public class UserService(UserRepo userRepo)
     }
 
 
-    public async Task AddAsync(User user)
+    public async Task<UserDTO> AddAsync(CreateUserDTO user)
     {
-        await _userRepo.AddAsync(user);
+        return await _userRepo.AddAsync(user);
     }
-   
-    
+
+    public async Task<UserDTO> LoginAsync(UserLoginDTO login)
+    {
+        return await _userRepo.LoginAsync(login);
+    }
+        
+
+
+
 }
