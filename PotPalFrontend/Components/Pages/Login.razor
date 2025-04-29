@@ -14,18 +14,19 @@
                 <form id="loginForm">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" />
+                        <input type="email" @bind-value="userLogin.Email" class="form-control" id="email" placeholder="Enter your email" />
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" />
+                        <input type="password" @bind-value="userLogin.Password" class="form-control" id="password" placeholder="Enter your password" />
                     </div>
                 </form>
             </div>
             <!-- Bottom section: Action button and navigation link -->
             <div class="mt-auto">
                 <!-- Use the form attribute to attach the button to the form even though it’s outside the <form> tag -->
-                <button type="submit" form="loginForm" class="btn btn-primary w-100 btn-action">Confirm</button>
+                <button type="submit" @onclick="ConfirmLogin" form="loginForm" class="btn btn-primary w-100 btn-action">Confirm</button>
+                
                 <div class="text-center mt-3 action-link">
                     <small>Don't have an account? <a href="/signup">Sign Up</a></small>
                 </div>
