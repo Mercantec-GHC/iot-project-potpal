@@ -29,7 +29,7 @@ public class PlantController : Controller
         return Ok(plant);
     }
 
-    [HttpGet("{guid}")]
+    [HttpGet("byGuid/{guid}")]
     public async Task<IActionResult> GetPlantByGuid(string guid)
     {
         var plant = await _plantService.GetByGuidAsync(guid);
@@ -39,7 +39,18 @@ public class PlantController : Controller
         }
         return Ok(plant);
     }
-    
+
+    [HttpGet("byUser/{email}")]
+    public async Task<IActionResult> GetPlantByUser(string email)
+    {
+        var plant = await _plantService.GetByUserAsync(email);
+        if (plant == null)
+        {
+            return NotFound();
+        }
+        return Ok(plant);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddPlantAsync(Plant plant)
     {
@@ -52,9 +63,9 @@ public class PlantController : Controller
     }
     
     [HttpPut("{guid}")]
-    public async Task<IActionResult> UpdatePlantAsync(string GUID, Plant plant)
+    public async Task<IActionResult> UpdatePlantAsync(string guid, Plant plant)
     {
-        var existingPlant = await _plantService.GetByGuidAsync(GUID);
+        var existingPlant = await _plantService.GetByGuidAsync(guid);
         if (existingPlant == null)
         {
             return NotFound();

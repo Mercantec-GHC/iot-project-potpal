@@ -14,6 +14,10 @@ public class PlantService(PlantRepo plantRepo)
     {
         return await _plantRepo.GetByGuidAsync(guid);
     }
+    public async Task<IEnumerable<Plant>> GetByUserAsync(string email)
+    {
+        return await _plantRepo.GetByUserAsync(email);
+    }
 
 
     public async Task<IEnumerable<Plant>> GetAllAsync()

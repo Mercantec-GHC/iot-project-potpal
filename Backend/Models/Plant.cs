@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Models;
 
 public class Plant
@@ -15,6 +16,9 @@ public class Plant
     public float Temperature { get; set; }
     public float LightLevel { get; set; }
     public float AirHumidity { get; set; }
+
     public string UserEmail { get; set; } = "";
-    
+
+    [ForeignKey("UserEmail")]
+    public User User { get; set; } = null!;
 }
