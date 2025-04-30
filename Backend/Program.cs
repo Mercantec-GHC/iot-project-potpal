@@ -1,5 +1,6 @@
 using Database;
 using Microsoft.EntityFrameworkCore;
+using Services;
 
 
 
@@ -23,6 +24,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddScoped<MetricService>();
+builder.Services.AddScoped<MetricRepo>();
 var app = builder.Build();
 
 
