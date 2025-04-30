@@ -13,6 +13,8 @@ public class Plant
     public float IdealLightLevel { get; set; }
     public float IdealAirHumidity { get; set; }
     public string UserEmail { get; set; } = "";
-    
     public List<Metric> Metrics { get; set; } = new();
+
+    [ForeignKey("UserEmail")]
+    public User User { get; set; } = null!;
 }

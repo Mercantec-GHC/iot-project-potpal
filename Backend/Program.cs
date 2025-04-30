@@ -12,8 +12,7 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 
-//builder.Services.AddDbContext<PotPalDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<PotPalDbContext>(options => options.UseNpgsql("Host=10.133.51.109;Port=5432;Database=PotPalDB;Username=user;Password=Password123!"));
+builder.Services.AddDbContext<PotPalDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // Add services to the container.
@@ -24,6 +23,8 @@ builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<PlantRepo>();
 builder.Services.AddScoped<PlantService>();
+builder.Services.AddScoped<MetricRepo>();
+builder.Services.AddScoped<MetricService>();
 
 builder.Services.AddControllers();
 
