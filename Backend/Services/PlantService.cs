@@ -1,5 +1,3 @@
-using Database;
-using Microsoft.EntityFrameworkCore;
 using Models;
 
 public class PlantService(PlantRepo plantRepo)
