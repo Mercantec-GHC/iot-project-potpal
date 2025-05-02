@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Models;
 
 namespace Database;
@@ -12,13 +13,13 @@ public class PotPalDbContext : DbContext
      public DbSet<Plant> Plants { get; set; }
      public DbSet<Metric> Metrics { get; set; }
 
-     protected override void OnModelCreating(ModelBuilder modelBuilder)
-     {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>()
-        .HasIndex(u => new { u.Email })
-        .IsUnique(true);
+            .HasIndex(u => new { u.Email })
+            .IsUnique(true);
 
         modelBuilder.Entity<Metric>()
             .HasOne(m => m.Plant)
@@ -26,6 +27,12 @@ public class PotPalDbContext : DbContext
             .HasForeignKey(m => m.PlantGUID)
             .HasPrincipalKey(p => p.GUID)
             .OnDelete(DeleteBehavior.Cascade);
-     }
+
+        modelBuilder.Entity<Plant>()
+            .HasOne(p => p.User)
+            .WithMany(u => u.Plants)
+            .HasForeignKey(p => p.UserEmail)
+            .HasPrincipalKey(u => u.Email);
+    }
 }
 

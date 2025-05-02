@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject IHttpClientFactory ClientFactory
 
 <PageTitle>Home</PageTitle>
 
@@ -7,10 +8,49 @@
 Welcome to your new app.
 
 <div class="background-box">
-	<h3>My plants</h3>
-	<div class="plant-container">
-		<PlantWidget />
-		<PlantWidget />
-		<PlantWidget />
-	</div>
+    <h3>My plants</h3>
+    <div class="plant-container">
+        @if (plants == null)
+        {
+            <p>Loading plants...</p>
+        }
+        else
+        {
+            @foreach (var plant in plants)
+            {
+                var newestMetric = plant.Metrics?.OrderByDescending(m => m.Timestamp).FirstOrDefault();
+
+                if (newestMetric != null)
+                {
+                    <PlantWidget Name="@plant.PlantName"
+                                 Humidity="@newestMetric.AirHumidity.ToString("F1")"
+                                 Temperature="@newestMetric.Temperature.ToString("F1")"
+                                 Moisture="@newestMetric.SoilMoisture.ToString("F1")"
+                                 LightLevel="@newestMetric.LightLevel.ToString("F1")" />
+                }
+                else
+                {
+                    <p>@plant.PlantName has no metrics yet.</p>
+                }
+            }
+        }
+    </div>
 </div>
+
+@code {
+    private List<Plant> plants = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = ClientFactory.CreateClient("ApiCall");
+
+            plants = await client.GetFromJsonAsync<List<Plant>>("plant/1@example.com");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching plant data: {ex.Message}");
+        }
+    }
+}
