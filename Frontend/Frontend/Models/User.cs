@@ -12,4 +12,5 @@ public class User
     [Required]
     [EmailAddress]
     public string Email { get; set; } = "";
+    public List<Plant>? Plants { get; set; }
 }

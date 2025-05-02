@@ -23,10 +23,10 @@ Welcome to your new app.
                 if (newestMetric != null)
                 {
                     <PlantWidget Name="@plant.PlantName"
-                                 Humidity="@newestMetric.AirHumidity.ToString("F1")"
-                                 Temperature="@newestMetric.Temperature.ToString("F1")"
-                                 Moisture="@newestMetric.SoilMoisture.ToString("F1")"
-                                 LightLevel="@newestMetric.LightLevel.ToString("F1")" />
+                    Humidity="@newestMetric.AirHumidity.ToString()"
+                    Temperature="@newestMetric.Temperature.ToString()"
+                    Moisture="@newestMetric.SoilMoisture.ToString()"
+                    LightLevel="@newestMetric.LightLevel.ToString()" />
                 }
                 else
                 {
@@ -45,8 +45,12 @@ Welcome to your new app.
         try
         {
             var client = ClientFactory.CreateClient("ApiCall");
+            var email = "1@example.com";
+            var encodedEmail = Uri.EscapeDataString(email);
 
-            plants = await client.GetFromJsonAsync<List<Plant>>("plant/1@example.com");
+            plants = await client.GetFromJsonAsync<List<Plant>>($"plant/byUser/{encodedEmail}");
+            
+            Console.WriteLine($"Received {plants.Count} plants.");
         }
         catch (Exception ex)
         {
