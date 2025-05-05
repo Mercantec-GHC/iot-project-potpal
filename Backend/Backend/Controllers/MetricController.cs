@@ -49,5 +49,4 @@ public class MetricController : Controller
         }
         return Ok(metric);
     }
-    
 }

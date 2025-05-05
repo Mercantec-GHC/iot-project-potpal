@@ -26,6 +26,4 @@ public class MetricService(MetricRepo metricRepo)
     {
         await _metricRepo.AddAsync(metric);
     }
-   
-    
 }
