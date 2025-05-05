@@ -6,7 +6,9 @@ ENV ASPNETCORE_URLS=http://+:5000
 WORKDIR /app
 COPY  ./ /app
 RUN mkdir /build
-RUN dotnet publish --sc -o /build
+RUN dotnet restore
+RUN dotnet publish Backend.csproj -c Release -o /build
+
 
 # Run project
 WORKDIR /build
