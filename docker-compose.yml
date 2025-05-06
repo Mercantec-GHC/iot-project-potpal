@@ -1,0 +1,25 @@
+services:
+
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./data:/var/lib/postgresql/data/"
+
+
+  backend:
+    container_name: backend
+    restart: unless-stopped
+    build: ./Backend
+    ports:
+      - "6002:5000" # Optional for debugging
+    environment:
+      - DB_CONNECTION_STRING=server=db;database=${PG_DATABASE};port=5432;user=${PG_USER};password=${PG_PASSWORD};
+      #- SMTP_CONNECTION_STRING=${SMTP_ADDRESS}__${SMTP_PORT}__${SMTP_USER}__${SMTP_PASSWORD}
+     
