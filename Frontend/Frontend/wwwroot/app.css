@@ -49,3 +49,23 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.background-box {
+    padding: 16px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 10px;
+}
+
+.content {
+    margin-top: 10px;
+}
+
+.plant-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+

@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Models;
 
 public class Plant
@@ -12,8 +13,8 @@ public class Plant
     public float IdealLightLevel { get; set; }
     public float IdealAirHumidity { get; set; }
     public string UserEmail { get; set; } = "";
-    
-    // Navigation property: one Plant has many Metrics
     public List<Metric> Metrics { get; set; } = new();
 
+    [ForeignKey("UserEmail")]
+    public User User { get; set; } = null!;
 }

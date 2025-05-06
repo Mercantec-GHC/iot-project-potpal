@@ -9,15 +9,16 @@ using Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add configuration settings
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
-
+// Add DbContext and connection string
 builder.Services.AddDbContext<PotPalDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-//builder.Services.AddDbContext<PotPalDbContext>(options => options.UseNpgsql(""));
 
 
 // Add services to the container.
@@ -80,10 +81,7 @@ builder.Services.AddScoped<MetricRepo>();
 
 var app = builder.Build();
 
-
-
-
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -98,5 +96,3 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.Run();
-
-
