@@ -16,9 +16,9 @@ services:
   backend:
     container_name: backend
     restart: unless-stopped
-    build: ./Backend/Backend
+    build: ./Backend
     ports:
-      - "6002:5000" # Optional for debugging
+      - "6002:80" # Optional for debugging
     environment:
       - DB_CONNECTION_STRING=server=db;database=${PG_DATABASE};port=5432;user=${PG_USER};password=${PG_PASSWORD};
       #- SMTP_CONNECTION_STRING=${SMTP_ADDRESS}__${SMTP_PORT}__${SMTP_USER}__${SMTP_PASSWORD}
