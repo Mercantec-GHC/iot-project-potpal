@@ -14,8 +14,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /out .
 
-ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_URLS=http://+:5000
 ENV DOTNET_RUNNING_IN_CONTAINER=true
 
-EXPOSE 80
 ENTRYPOINT ["dotnet", "Backend.dll"]
