@@ -1,5 +1,3 @@
-using Database;
-using Microsoft.EntityFrameworkCore;
 using Models;
 
 public class UserService(UserRepo userRepo)
@@ -29,9 +27,14 @@ public class UserService(UserRepo userRepo)
 
     public async Task<UserDTO> LoginAsync(UserLoginDTO login)
     {
-        return await _userRepo.LoginAsync(login);
+        var result = await _userRepo.LoginAsync(login);
+        if (result == null)
+        {
+            throw new InvalidOperationException("Login failed: user not found.");
+        }
+        return result;
     }
-        
+
 
 
 

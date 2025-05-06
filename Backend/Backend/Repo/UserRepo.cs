@@ -40,7 +40,10 @@ public class UserRepo
         await _dbContext.Users.AddAsync(createUser);
         int result = await _dbContext.SaveChangesAsync();
 
-        if (result < 1) return null;
+        if (result < 1) 
+        {
+            throw new InvalidOperationException("Failed to add the user to the database.");
+        }
 
         string Token = GenerateToken(createUser.UserName);
 
@@ -51,12 +54,13 @@ public class UserRepo
         };
     }
 
-    public async Task<UserDTO> LoginAsync(UserLoginDTO login)
+    public async Task<UserDTO?> LoginAsync(UserLoginDTO login)
     {
         User user;
         try
         {
-            user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == login.Email && u.Password == login.Password);
+            user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == login.Email && u.Password == login.Password) 
+                   ?? throw new InvalidOperationException("User not found.");
         }
         catch (Exception)
         {
@@ -69,14 +73,15 @@ public class UserRepo
 
         return new UserDTO
         {
-            UserName = user.UserName,
+            UserName = user.UserName ?? string.Empty,
             Token = Token,
         };
     }
 
     private string GenerateToken(string userName)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
