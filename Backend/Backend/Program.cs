@@ -7,7 +7,6 @@ using System.Text;
 
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add configuration settings
@@ -23,11 +22,23 @@ builder.Services.AddDbContext<PotPalDbContext>(options => options.UseNpgsql(buil
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Optional: You can configure other options if needed
+})
+.AddJsonOptions(options =>
+{
+    // Configure JSON serialization to handle circular references
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<MetricService>();
+builder.Services.AddScoped<MetricRepo>();
+builder.Services.AddScoped<PlantService>();
+builder.Services.AddScoped<PlantRepo>();
 
 // This is for testing on swagger
 builder.Services.AddSwaggerGen(c =>
@@ -75,9 +86,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
-builder.Services.AddScoped<MetricService>();
-builder.Services.AddScoped<MetricRepo>();
 
 var app = builder.Build();
 
