@@ -1,0 +1,48 @@
+﻿@page "/signup"
+
+    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-75 shadow-lg">
+            <!-- Left side: Sign-Up Form -->
+            <div class="col-md-6 p-5 bg-light form-box d-flex flex-column">
+                <!-- Top section: Logo, header and form fields -->
+                <div>
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="img/flower-pot-and-plant-logo-growth-logo-free-vector.jpg" alt="Company Logo" class="logo me-2" />
+                        <span class="company-text fw-bold">PotPal</span>
+                    </div>
+                    <h2 class="text-center mb-4">Sign Up</h2>
+                    <form id="signupForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" @bind-value="userCreate.Email" class="form-control" id="email" placeholder="Enter your email" />
+                        </div>
+                        <div class="mb-3">
+                           <label for="userName" class="form-label">UserName</label>
+                        <input type="text" @bind-value="userCreate.UserName" class="form-control" id="userName" placeholder="Enter your userName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                        <input type="password" @bind-value="userCreate.Password" class="form-control" id="password" placeholder="Enter your password" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" />
+                        </div>
+                    </form>
+                </div>
+                <!-- Bottom section: Action button and navigation link -->
+                <div class="mt-auto">
+                    <button type="submit" @onclick="ConfirmSignUp" form="signupForm" class="btn btn-primary w-100 btn-action">Sign Up</button>
+                    <div class="text-center mt-3 action-link">
+                        <small>Already have an account? <a href="/Login">Sign In</a></small>
+                    </div>
+                </div>
+            </div>
+            <!-- Right side: Image -->
+            <div class="col-md-6 p-0 d-none d-md-block">
+                <img src="img/imagePotPal (1).png" alt="Your Image" class="img-fluid h-100 w-100" />
+            </div>
+        </div>
+    </div>
+
+
