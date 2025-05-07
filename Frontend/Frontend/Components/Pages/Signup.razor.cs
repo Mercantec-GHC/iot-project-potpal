@@ -1,15 +1,16 @@
-﻿using Models;
+﻿using Microsoft.AspNetCore.Components;
+using Models;
 using PotPalFrontend.Repo;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 
-namespace PotPalFrontend.Components.Pages
+namespace Frontend.Components.Pages
 {
-    public partial class Signup
+    public partial class Signup : ComponentBase
     {
         public CreateUserDTO userCreate { get; set; } = new CreateUserDTO();
 
-        public UserDTO UserResult { get; set; }
+        public UserDTO UserResult { get; set; } = new();
 
         private UserRepo userRepo = new UserRepo();
 

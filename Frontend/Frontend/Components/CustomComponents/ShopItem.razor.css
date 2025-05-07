@@ -1,0 +1,22 @@
+﻿.shop-item {
+    padding: 16px;
+    background-color: #c0c0c0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 10px;
+}
+
+.content {
+    margin-top: 10px;
+}
+
+.image {
+    gap: 10px;
+}
+
+.item-name {
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+}
