@@ -1,0 +1,41 @@
+﻿@page "/Login"
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-75 shadow-lg">
+        <!-- Left side: Login Form -->
+        <!-- Adding d-flex flex-column to the form-box container -->
+        <div class="col-md-6 p-5 bg-light form-box d-flex flex-column">
+            <!-- Top section: Logo, header and form fields -->
+            <div>
+                <div class="d-flex align-items-center mb-4">
+                    <img src="img/flower-pot-and-plant-logo-growth-logo-free-vector.jpg" alt="Company Logo" class="logo me-2" />
+                    <span class="company-text fw-bold">PotPal</span>
+                </div>
+                <h2 class="text-center mb-4">Login</h2>
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" @bind-value="userLogin.Email" class="form-control" id="email" placeholder="Enter your email" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" @bind-value="userLogin.Password" class="form-control" id="password" placeholder="Enter your password" />
+                    </div>
+                </form>
+            </div>
+            <!-- Bottom section: Action button and navigation link -->
+            <div class="mt-auto">
+                <!-- Use the form attribute to attach the button to the form even though it’s outside the <form> tag -->
+                <button type="submit" @onclick="ConfirmLogin" form="loginForm" class="btn btn-primary w-100 btn-action">Confirm</button>
+                
+                <div class="text-center mt-3 action-link">
+                    <small>Don't have an account? <a href="/signup">Sign Up</a></small>
+                </div>
+            </div>
+        </div>
+        <!-- Right side: Image -->
+        <div class="col-md-6 p-0 d-none d-md-block">
+            <img src="img/imagePotPal (1).png" alt="Your Image" class="img-fluid h-100 w-100" />
+        </div>
+    </div>
+</div>
+
