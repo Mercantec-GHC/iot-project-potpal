@@ -9,10 +9,10 @@ char pass[] = "Merc1234!";
 
 // API server settings
 char serverAddress[] = "10.133.51.109"; // your server's local IP address
-int port = 5000; // server port where your ASP.NET Core API is running
+int port = 80; // server port where your ASP.NET Core API is running
 
 // Sensors
-const int soilMoisturePin = A1; // Pin connected to soil moisture sensor
+const int soilMoisturePin = A6; // Pin connected to soil moisture sensor
 
 WiFiClient wifi;
 HttpClient client = HttpClient(wifi, serverAddress, port);
