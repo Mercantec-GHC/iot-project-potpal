@@ -22,4 +22,15 @@ services:
     environment:
       - DB_CONNECTION_STRING=server=db;database=${PG_DATABASE};port=5432;user=${PG_USER};password=${PG_PASSWORD};
       #- SMTP_CONNECTION_STRING=${SMTP_ADDRESS}__${SMTP_PORT}__${SMTP_USER}__${SMTP_PASSWORD}
+
+
+  frontend:
+    container_name: backend
+    restart: unless-stopped
+    build: ./Frontend
+    ports:
+      - "5000:80"
+
+  
+
      
