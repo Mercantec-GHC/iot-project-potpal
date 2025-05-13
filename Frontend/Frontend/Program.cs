@@ -7,7 +7,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient("ApiCall", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:1"); 
+    client.BaseAddress = new Uri("http://10.133.51.109:6002/api/"); 
 });
 builder.Services.AddHttpClient();
 

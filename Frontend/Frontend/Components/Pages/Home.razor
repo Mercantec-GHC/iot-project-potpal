@@ -1,60 +1,83 @@
 ﻿@page "/"
 @inject IHttpClientFactory ClientFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<PageTitle>My plants</PageTitle>
 
 <div class="background-box">
-    <h3>My plants</h3>
-    <div class="plant-container">
-        @if (plants == null)
-        {
-            <p>Loading plants...</p>
-        }
-        else
-        {
-            @foreach (var plant in plants)
-            {
-                var newestMetric = plant.Metrics?.OrderByDescending(m => m.Timestamp).FirstOrDefault();
+	<h3>My plants</h3>
+	<div class="plant-container">
+		@if (!loggedIn)
+		{
+			<h2><a href="/login">Login</a> to see your plants</h2>
+		}
+		else if (plants == null)
+		{
+			<p>Loading plants...</p>
+		}
+		else
+		{
+			@foreach (var plant in plants)
+			{
+				var newestMetric = plant.Metrics?.OrderByDescending(m => m.Timestamp).FirstOrDefault();
 
-                if (newestMetric != null)
-                {
-                    <PlantWidget Name="@plant.PlantName"
-                    Humidity="@newestMetric.AirHumidity.ToString()"
-                    Temperature="@newestMetric.Temperature.ToString()"
-                    Moisture="@newestMetric.SoilMoisture.ToString()"
-                    LightLevel="@newestMetric.LightLevel.ToString()" />
-                }
-                else
-                {
-                    <p>@plant.PlantName has no metrics yet.</p>
-                }
-            }
-        }
-    </div>
+				if (newestMetric != null)
+				{
+					<PlantWidget Name="@plant.PlantName"
+								 Humidity="@newestMetric.AirHumidity.ToString()"
+								 Temperature="@newestMetric.Temperature.ToString()"
+								 Moisture="@newestMetric.SoilMoisture.ToString()"
+								 LightLevel="@newestMetric.LightLevel.ToString()" />
+				}
+				else
+				{
+					<div class="plant-box-no-metric">
+						<h3>@plant.PlantName has no metrics yet.</h3>
+					</div>
+				}
+			}
+		}
+	</div>
 </div>
 
 @code {
-    private List<Plant> plants = new();
+	private List<Plant> plants = new();
+	private bool loggedIn = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var client = ClientFactory.CreateClient("ApiCall");
-            var email = "1@example.com";
-            var encodedEmail = Uri.EscapeDataString(email);
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+			var user = authState.User;
 
-            plants = await client.GetFromJsonAsync<List<Plant>>($"plant/byUser/{encodedEmail}");
-            
-            Console.WriteLine($"Received {plants.Count} plants.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching plant data: {ex.Message}");
-        }
-    }
+			if (user.Identity?.IsAuthenticated ?? false)
+			{
+				var email = user.FindFirst(ClaimTypes.Email)?.Value;
+
+				if (!string.IsNullOrEmpty(email))
+				{
+					var encodedEmail = Uri.EscapeDataString(email);
+
+					var client = ClientFactory.CreateClient("ApiCall");
+					plants = await client.GetFromJsonAsync<List<Plant>>($"plant/byUser/{encodedEmail}");
+
+					Console.WriteLine($"Received {plants.Count} plants for {email}.");
+				}
+				else
+				{
+					Console.WriteLine("Email claim is missing.");
+				}
+			}
+			else
+			{
+				Console.WriteLine("User is not authenticated.");
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching plant data: {ex.Message}");
+		}
+	}
 }
