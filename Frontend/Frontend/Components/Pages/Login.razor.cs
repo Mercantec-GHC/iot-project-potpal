@@ -19,6 +19,5 @@ namespace Frontend.Components.Pages
             UserResult = await userRepo.LoginAsync(userLogin);
             StateHasChanged();
         }
-
     }
 }
