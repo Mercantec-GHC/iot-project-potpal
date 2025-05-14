@@ -15,7 +15,7 @@ public class MetricController : Controller
     public MetricController(MetricService metricService)
     {
         _metricService = metricService;
-
+         
     }
 
     [HttpGet]
@@ -49,4 +49,5 @@ public class MetricController : Controller
         }
         return Ok(metric);
     }
+
 }
