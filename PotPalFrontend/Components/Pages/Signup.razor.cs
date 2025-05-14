@@ -11,7 +11,9 @@ namespace PotPalFrontend.Components.Pages
 
         public UserDTO UserResult { get; set; }
 
-        private UserRepo userRepo = new UserRepo();
+        [Inject]
+        public UserRepo userRepo { get; set; }
+
 
         public async Task ConfirmSignUp()
         {

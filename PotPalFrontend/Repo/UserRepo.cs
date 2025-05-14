@@ -5,30 +5,28 @@ namespace PotPalFrontend.Repo
 {
     public class UserRepo
     {
-      
+        private readonly UserServices _userServices;
 
-        UserServices userServices = new UserServices();
-
-        public async Task<UserDTO> LoginAsync(UserLoginDTO login)
+        public UserRepo(UserServices userServices)
         {
-            if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.Password)) return null; 
-
-            //Stores the login data in userDTO
-            UserDTO userDTO = await userServices.LoginAsync(login);
-
-            return userDTO != null ? userDTO : null;
+            _userServices = userServices;
         }
 
-        public async Task<UserDTO> AddAsync(CreateUserDTO signUp)
+        public async Task<UserDTO?> LoginAsync(UserLoginDTO login)
         {
-            if (signUp == null || string.IsNullOrEmpty(signUp.Email) || string.IsNullOrEmpty(signUp.UserName) || string.IsNullOrEmpty(signUp.Password)) return null;
+            Console.WriteLine("Sending POST to api/user/login");
+            if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.Password))
+                return null;
 
-
-            UserDTO userDTO = await userServices.AddAsync(signUp);
-
-            return userDTO != null ? userDTO : null;
+            return await _userServices.LoginAsync(login);
         }
 
-        
+        public async Task<UserDTO?> AddAsync(CreateUserDTO signUp)
+        {
+            if (signUp == null || string.IsNullOrEmpty(signUp.Email) || string.IsNullOrEmpty(signUp.UserName) || string.IsNullOrEmpty(signUp.Password))
+                return null;
+
+            return await _userServices.AddAsync(signUp);
+        }
     }
 }

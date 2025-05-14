@@ -1,4 +1,7 @@
 using Frontend.Components;
+using Models;
+using PotPalFrontend.Repo;
+using PotPalFrontend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+<<<<<<< Updated upstream
+=======
+builder.Services.AddHttpClient("ApiCall", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:1"); 
+});
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<UserRepo>();
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5187/") }); 
+
+>>>>>>> Stashed changes
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -15,6 +30,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 

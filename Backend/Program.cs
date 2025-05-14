@@ -24,6 +24,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserService>();
 
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
 // This is for testing on swagger
 builder.Services.AddSwaggerGen(c =>
 {

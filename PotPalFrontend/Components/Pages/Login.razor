@@ -1,4 +1,5 @@
 ﻿@page "/Login"
+<<<<<<< Updated upstream:PotPalFrontend/Components/Pages/Login.razor
 <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
     <div class="row w-75 shadow-lg">
         <!-- Left side: Login Form -->
@@ -38,4 +39,54 @@
         </div>
     </div>
 </div>
+=======
 
+@using PotPalFrontend.Repo
+@inject UserRepo userRepo
+>>>>>>> Stashed changes:Frontend/Frontend/Components/Pages/Login.razor
+
+<h3>Login</h3>
+
+<EditForm Model="@userLogin" OnValidSubmit="HandleSubmit" FormName="loginForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="userLogin.Email" />
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <InputText class="form-control" type="password" @bind-Value="userLogin.Password" />
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">Login</button>
+</EditForm>
+
+@if (UserResult != null)
+{
+    <p class="text-success">Welcome, @UserResult.UserName!</p>
+}
+else if (loginAttempted)
+{
+    <p class="text-danger">Login failed.</p>
+}
+
+@code {
+    public UserLoginDTO userLogin { get; set; } = new();
+    public UserDTO? UserResult { get; set; }
+    bool loginAttempted = false;
+
+    private async Task HandleSubmit()
+    {
+        Console.WriteLine("▶️ HandleSubmit called");
+
+        UserResult = await userRepo.LoginAsync(userLogin);
+        loginAttempted = true;
+
+        Console.WriteLine(UserResult != null
+        ? $"✅ Logged in as {UserResult.UserName}"
+        : "❌ Login failed");
+    }
+}
