@@ -14,4 +14,5 @@ public class User
     [EmailAddress]
     public string Email { get; set; } = "";
     public List<Plant>? Plants { get; set; } = new();
+    public List<ShopItem>? ShopItemsInCart { get; set; } = new();
 }

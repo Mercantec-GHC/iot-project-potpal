@@ -12,6 +12,7 @@ public class PotPalDbContext : DbContext
      public DbSet<User> Users { get; set; }
      public DbSet<Plant> Plants { get; set; }
      public DbSet<Metric> Metrics { get; set; }
+    public DbSet<ShopItem> ShopItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,11 @@ public class PotPalDbContext : DbContext
             .WithMany(u => u.Plants)
             .HasForeignKey(p => p.UserEmail)
             .HasPrincipalKey(u => u.Email);
+
+        modelBuilder.Entity<ShopItem>()
+            .HasMany(s => s.UsersWithThisInCart)
+            .WithMany(u => u.ShopItemsInCart)
+            .UsingEntity(j => j.ToTable("CartItems"));
     }
 }
 
