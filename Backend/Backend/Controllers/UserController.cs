@@ -52,7 +52,7 @@ public class UserController : Controller
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync(UserLoginDTO LoginUser)
+    public async Task<IActionResult> LoginAsync([FromBody] UserLoginDTO LoginUser)
     {
         UserDTO user = await _userService.LoginAsync(LoginUser);
         if (user == null)

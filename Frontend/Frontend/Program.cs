@@ -1,15 +1,22 @@
 using Frontend.Components;
+using PotPalFrontend.Repo;
+using PotPalFrontend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddHttpClient("ApiCall", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:1"); 
+    client.BaseAddress = new Uri("http://localhost:5187/");
 });
-builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<UserRepo>();
+
 
 var app = builder.Build();
 

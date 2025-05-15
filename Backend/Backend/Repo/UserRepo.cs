@@ -10,7 +10,7 @@ public class UserRepo
 {
     private readonly PotPalDbContext _dbContext;
     private readonly IConfiguration _configuration;
-   
+
     public UserRepo(PotPalDbContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
@@ -40,7 +40,7 @@ public class UserRepo
         await _dbContext.Users.AddAsync(createUser);
         int result = await _dbContext.SaveChangesAsync();
 
-        if (result < 1) 
+        if (result < 1)
         {
             throw new InvalidOperationException("Failed to add the user to the database.");
         }
@@ -54,20 +54,17 @@ public class UserRepo
         };
     }
 
+    
     public async Task<UserDTO?> LoginAsync(UserLoginDTO login)
     {
-        User user;
-        try
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Email == login.Email && u.Password == login.Password);
+
+        if (user == null)
         {
-            user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == login.Email && u.Password == login.Password) 
-                   ?? throw new InvalidOperationException("User not found.");
-        }
-        catch (Exception)
-        {
+            Console.WriteLine($"❌ No user with email: {login.Email}");
             return null;
         }
-
-        if (user == null) return null;
 
         string Token = GenerateToken(user.Email);
 
@@ -77,6 +74,8 @@ public class UserRepo
             Token = Token,
         };
     }
+
+
 
     private string GenerateToken(string userName)
     {
