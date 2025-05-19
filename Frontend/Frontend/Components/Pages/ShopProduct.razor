@@ -1,0 +1,38 @@
+﻿@page "/shop/{productID:int}"
+@rendermode InteractiveServer
+@inject IHttpClientFactory ClientFactory
+
+<PageTitle>Shop</PageTitle>
+
+@if (product == null)
+{
+	<p>Loading product details...</p>
+}
+else
+{
+	<h1>@product.Id</h1>
+	<h1>@product.ItemName</h1>
+	<h1>@product.Price</h1>
+	<h1>@product.Description</h1>
+}
+
+
+@code {
+	[Parameter]
+	public int productID{ get; set; }
+
+	public Models.ShopItem product;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var client = ClientFactory.CreateClient("ApiCall");
+			product = await client.GetFromJsonAsync<Models.ShopItem>($"shop/byID/{productID}");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching plant data: {ex.Message}");
+		}
+	}
+}

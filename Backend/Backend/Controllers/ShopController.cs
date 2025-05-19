@@ -28,6 +28,17 @@ public class ShopController : Controller
         }
         return Ok(metric);
     }
+
+    [HttpGet("byID/{ID}")]
+    public async Task<IActionResult> GetShopItemByID(int ID)
+    {
+        var metric = await _shopService.GetByIDAsync(ID);
+        if (metric == null)
+        {
+            return NotFound();
+        }
+        return Ok(metric);
+    }
     
     [HttpPost]public async Task<IActionResult> AddShopItemAsync(ShopItem shopItem)
     {

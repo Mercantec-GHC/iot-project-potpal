@@ -8,11 +8,7 @@
 <div class="background-box">
 	<h3>My plants</h3>
 	<div class="plant-container">
-		@if (!loggedIn)
-		{
-			<h2><a href="/login">Login</a> to see your plants</h2>
-		}
-		else if (plants == null)
+		@if (plants == null)
 		{
 			<p>Loading plants...</p>
 		}
@@ -24,11 +20,14 @@
 
 				if (newestMetric != null)
 				{
-					<PlantWidget Name="@plant.PlantName"
-								 Humidity="@newestMetric.AirHumidity.ToString()"
-								 Temperature="@newestMetric.Temperature.ToString()"
-								 Moisture="@newestMetric.SoilMoisture.ToString()"
-								 LightLevel="@newestMetric.LightLevel.ToString()" />
+					<a class="button-unchanged"
+					   href="@($"/plant/details/{plant.GUID}")">
+						<PlantWidget Name="@plant.PlantName"
+									 Humidity="@newestMetric.AirHumidity.ToString()"
+									 Temperature="@newestMetric.Temperature.ToString()"
+									 Moisture="@newestMetric.SoilMoisture.ToString()"
+									 LightLevel="@newestMetric.LightLevel.ToString()" />
+					</a>
 				}
 				else
 				{
@@ -47,14 +46,15 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		var email = "1@example.com";
 		try
 		{
 			var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 			var user = authState.User;
 
-			if (user.Identity?.IsAuthenticated ?? false)
-			{
-				var email = user.FindFirst(ClaimTypes.Email)?.Value;
+			// if (user.Identity?.IsAuthenticated ?? false)
+			// {
+				//var email = user.FindFirst(ClaimTypes.Email)?.Value;
 
 				if (!string.IsNullOrEmpty(email))
 				{
@@ -69,11 +69,11 @@
 				{
 					Console.WriteLine("Email claim is missing.");
 				}
-			}
-			else
-			{
-				Console.WriteLine("User is not authenticated.");
-			}
+			// }
+			// else
+			// {
+			// 	Console.WriteLine("User is not authenticated.");
+			// }
 		}
 		catch (Exception ex)
 		{

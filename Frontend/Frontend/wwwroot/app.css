@@ -111,3 +111,10 @@ h1:focus {
     width: 500px;
     margin: 10px;
 }
+
+.button-unchanged {
+    all: unset;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+}

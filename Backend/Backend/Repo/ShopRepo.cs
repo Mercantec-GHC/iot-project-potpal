@@ -1,3 +1,4 @@
+using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -14,6 +15,12 @@ public class ShopRepo
     public async Task<IEnumerable<ShopItem>> GetAllAsync()
     {
         return await _dbContext.ShopItems.ToListAsync();
+    }
+
+    public async Task<ShopItem> GetByIDAsync(int ID)
+    {
+        return await _dbContext.ShopItems
+            .FirstOrDefaultAsync(s => s.Id == ID);
     }
 
     public async Task AddAsync(ShopItem shopItem)

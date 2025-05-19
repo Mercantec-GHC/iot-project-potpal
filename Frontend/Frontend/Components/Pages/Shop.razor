@@ -1,12 +1,28 @@
 ﻿@page "/shop"
 @rendermode InteractiveServer
+@inject IHttpClientFactory ClientFactory
 
 <PageTitle>Shop</PageTitle>
 
 <h1>Shop</h1>
-
-<a href=@($"/shop/{ID}")><ShopItem Name="arduino device" /></a>
+@foreach (Models.ShopItem shopItem in shopItems)
+{
+	<a class="button-unchanged" href=@($"/shop/{shopItem.Id}")><ShopItem Name="@shopItem.ItemName" /></a>
+}
 
 @code {
-    int ID = 1;
+	private List<Models.ShopItem> shopItems = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var client = ClientFactory.CreateClient("ApiCall");
+			shopItems = await client.GetFromJsonAsync<List<Models.ShopItem>>($"shop");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching plant data: {ex.Message}");
+		}
+	}
 }
