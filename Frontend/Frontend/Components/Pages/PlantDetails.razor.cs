@@ -10,7 +10,7 @@ namespace Frontend.Components.Pages
         [Parameter]
         public required string PlantId { get; set; }
         PlantRepo plantRepo = new PlantRepo();
-        public Metric plantData {  get; set; }
+        public Plant plantData {  get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender) 
