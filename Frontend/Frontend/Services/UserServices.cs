@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Frontend.Repo;
+using Models;
 using Newtonsoft.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -10,6 +11,12 @@ namespace PotPalFrontend.Services
 {
     public class UserServices
     {
+        IUserAuth userAuth;
+        public UserServices(IUserAuth userAuth)
+        {
+            this.userAuth = userAuth;
+        }
+
         // HttpClient is supost to only be instanuated onse rather then per use
         HttpClient Http = new HttpClient();
 
@@ -37,6 +44,14 @@ namespace PotPalFrontend.Services
             if (httpResponse.IsSuccessStatusCode)
             {
                 UserDTO user = JsonConvert.DeserializeObject<UserDTO>(await httpResponse.Content.ReadAsStringAsync());
+                if (user != null)
+                {
+                    //Store the token in the local storage
+                    userAuth(user.Token);
+                    //Store the user in the local storage
+                    userAuth.SetUser(user);
+                    return user;
+                }
                 if (user != null) return user;
             }
             return null;

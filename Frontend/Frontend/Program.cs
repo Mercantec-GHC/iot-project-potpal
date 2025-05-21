@@ -1,4 +1,5 @@
 using Frontend.Components;
+using Frontend.Repo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddHttpClient("ApiCall", client =>
 {
     client.BaseAddress = new Uri("https://localhost:1"); 
 });
+builder.Services.AddSingleton<IUserAuth, UserAuth>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
