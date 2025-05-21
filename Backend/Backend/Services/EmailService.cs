@@ -2,7 +2,8 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using Models;
 
-public class EmailService() {
+public class EmailService()
+{
     public async Task SendAsync(Email email)
     {
         // create message
@@ -29,4 +30,6 @@ public class EmailService() {
             }
         }
     }
+
+
 }

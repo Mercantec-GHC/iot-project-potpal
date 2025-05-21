@@ -11,11 +11,17 @@ public class MetricRepo
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Metric>> GetByPlantAsync(string guid)
+    public async Task<Plant?> GetPlantWithUserAsync(string plantGuid)
+    {
+        return await _dbContext.Plants
+                        .Include(p => p.User)
+                        .FirstOrDefaultAsync(p => p.GUID == plantGuid);
+    }
+
+    public async Task<Metric?> GetByPlantGUIDAsync(string guid)
     {
         return await _dbContext.Metrics
-            .Where(m => m.PlantGUID == guid)
-            .ToListAsync();
+                    .FirstOrDefaultAsync(m => m.PlantGUID == guid);
     }
 
     public async Task<IEnumerable<Metric>> GetAllAsync()
@@ -25,26 +31,18 @@ public class MetricRepo
 
     public async Task AddAsync(Metric metric)
     {
-        // Retrieve the plant by GUID
-        var plant = await _dbContext.Plants.Include(p => p.User).FirstOrDefaultAsync(p => p.GUID == metric.PlantGUID);
-        if (plant == null)
-        {
-            throw new Exception($"Plant with GUID '{metric.PlantGUID}' not found.");
-        }
-
-        var user = plant.User;
-        if (user == null)
-        {
-            throw new Exception($"User with email '{plant.UserEmail}' not found.");
-        }
-
-        _dbContext.Entry(user).State = EntityState.Unchanged;
-
-        metric.Plant = plant;
-        metric.Plant.User = user;
-
-        metric.Timestamp = DateTime.UtcNow;
         await _dbContext.Metrics.AddAsync(metric);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Metric metric)
+    {
+        _dbContext.Metrics.Update(metric);
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task DeleteAsync(Metric metric)
+    {
+        _dbContext.Metrics.Remove(metric);
         await _dbContext.SaveChangesAsync();
     }
 }

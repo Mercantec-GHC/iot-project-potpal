@@ -14,6 +14,6 @@ public class Metric
     public float Temperature { get; set; }
     public float LightLevel { get; set; }
     public float AirHumidity { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     
 }
