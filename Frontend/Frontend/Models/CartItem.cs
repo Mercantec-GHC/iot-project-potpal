@@ -8,5 +8,5 @@ public class CartItem
     public User User { get; set; } = null!;
     public ShopItem ShopItem { get; set; } = null!;
 
-    public int Quantity { get; set; } = 1;
+    public int Quantity { get; set; }= 1;
 }
