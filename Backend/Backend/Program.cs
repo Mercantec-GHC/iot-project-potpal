@@ -40,8 +40,6 @@ builder.Services.AddScoped<MetricService>();
 builder.Services.AddScoped<MetricRepo>();
 builder.Services.AddScoped<PlantService>();
 builder.Services.AddScoped<PlantRepo>();
-builder.Services.AddScoped<ShopService>();
-builder.Services.AddScoped<ShopRepo>();
 
 // This is for testing on swagger
 builder.Services.AddSwaggerGen(c =>
