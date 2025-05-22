@@ -8,11 +8,11 @@ namespace Frontend.Components.Pages
 {
     public partial class Signup : ComponentBase
     {
+        [Inject]
+        public IUserRepo userRepo { get; set; } 
         public CreateUserDTO userCreate { get; set; } = new CreateUserDTO();
 
         public UserDTO UserResult { get; set; } = new();
-
-        private UserRepo userRepo = new UserRepo();
 
         public async Task ConfirmSignUp()
         {

@@ -16,17 +16,19 @@ namespace Frontend.Components.Pages
         PlantRepo plantRepo = new PlantRepo();
         public Plant plantData {  get; set; }
 
-        public User user;
+        public User UserResult { get; set; } = new User();
+
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
 
             if (firstRender) 
             {
-                user = userAuth.GetUser();
+                UserResult = userAuth.GetUser();
                 plantData = await plantRepo.PlantData(PlantId);
+                StateHasChanged();
             }
-
+            
         }
 
 

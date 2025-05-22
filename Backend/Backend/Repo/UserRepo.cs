@@ -73,6 +73,7 @@ public class UserRepo
 
         return new UserDTO
         {
+            Email = user.Email ?? string.Empty,
             UserName = user.UserName ?? string.Empty,
             Token = Token,
         };
