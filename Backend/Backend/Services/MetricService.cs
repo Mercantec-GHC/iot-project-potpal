@@ -10,9 +10,9 @@ public class MetricService(MetricRepo metricRepo)
     private readonly MetricRepo _metricRepo = metricRepo;
 
 
-    public async Task<IEnumerable<Metric>> GetByPlantAsync(string guid)
+    public async Task<IEnumerable<Metric>> GetByPlantAsync(string token)
     {
-        return await _metricRepo.GetByPlantAsync(guid);
+        return await _metricRepo.GetByPlantAsync(token);
     }
 
 
