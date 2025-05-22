@@ -40,7 +40,8 @@ public class ShopController : Controller
         return Ok(metric);
     }
     
-    [HttpPost]public async Task<IActionResult> AddShopItemAsync(ShopItem shopItem)
+    [HttpPost]
+    public async Task<IActionResult> AddShopItemAsync(ShopItem shopItem)
     {
         await _shopService.AddAsync(shopItem);
         if (shopItem == null)
@@ -48,5 +49,23 @@ public class ShopController : Controller
             return NotFound();
         }
         return Ok(shopItem);
+    }
+
+    [HttpPost("addToCart/{itemID}/{userToken}")]
+    public async Task<IActionResult> AddItemToCartAsync(int itemID, string userToken)
+    {
+        var result = await _shopService.AddItemToCartAsync(itemID, userToken);
+
+        if (result == "ITEM_ALREADY_IN_CART")
+        {
+            return Conflict(new { code = "ITEM_ALREADY_IN_CART", message = "This item is already in your cart." });
+        }
+
+        if (result == "ITEM_NOT_FOUND")
+        {
+            return NotFound(new { code = "ITEM_NOT_FOUND", message = "Item does not exist." });
+        }
+
+        return Ok(new { code = "ITEM_ADDED", message = "Item added to cart." });
     }
 }

@@ -10,16 +10,41 @@
 }
 else
 {
-	<h1>@product.Id</h1>
-	<h1>@product.ItemName</h1>
-	<h1>@product.Price</h1>
-	<h1>@product.Description</h1>
+	<div class="shop-item-container">
+		<div class="content-box-shop">
+			<div class="center-content">
+				<div class="image-shop-product">
+					<img src="@product.ImagePath" />
+				</div>
+				<h1>@product.ItemName</h1>
+			</div>
+		</div>
+		<div class="content-box-shop">
+			<div class="description-text">
+				<h1>@($"Description: {product.Price}")</h1>
+			</div>
+			<div class="price">
+				<h1>@($"{product.Price} kr.")</h1>
+			</div>
+			<div class="center-content">
+				<div class="add-to-cart">
+					<button class="button-centered" @onclick="AddToCart">Add to cart</button>
+				</div>
+			</div>
+
+			@if (ResponseMessage != null)
+			{
+				<p>@ResponseMessage</p>
+			}
+		</div>
+	</div>
 }
 
 
 @code {
 	[Parameter]
-	public int productID{ get; set; }
+	public int productID { get; set; }
+	public string ResponseMessage { get; set; }
 
 	public Models.ShopItem product;
 
@@ -33,6 +58,27 @@ else
 		catch (Exception ex)
 		{
 			Console.WriteLine($"Error fetching plant data: {ex.Message}");
+		}
+	}
+
+	async Task AddToCart()
+	{
+		var client = ClientFactory.CreateClient("ApiCall");
+		var userToken = "1";
+		var itemID = product.Id;
+		var status = await client.PostAsync($"shop/addToCart/{itemID}/{userToken}", null);
+
+		if (status.StatusCode == HttpStatusCode.OK)
+		{
+			ResponseMessage = "Added to cart";
+		}
+		else if (status.StatusCode == HttpStatusCode.Conflict)
+		{
+			ResponseMessage = "Item is already on your cart";
+		}
+		else
+		{
+			ResponseMessage = "Error, try again";
 		}
 	}
 }

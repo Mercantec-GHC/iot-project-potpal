@@ -28,4 +28,34 @@ public class ShopRepo
         await _dbContext.ShopItems.AddAsync(shopItem);
         await _dbContext.SaveChangesAsync();
     }
+
+    internal async Task<string> AddItemToCartAsync(int itemID, string userToken)
+    {
+        var user = await _dbContext.Users
+        .Include(u => u.ShopItemsInCart) // Load cart
+        .FirstOrDefaultAsync(u => u.token == userToken);
+
+        var item = await _dbContext.ShopItems.FindAsync(itemID);
+
+        if (user == null || item == null)
+        {
+            return "USER_OR_ITEM_NOT_FOUND";
+        }
+
+        if (user.ShopItemsInCart == null)
+        {
+            user.ShopItemsInCart = new List<ShopItem>();
+        }
+
+        // Check if item is already in the cart
+        if (user.ShopItemsInCart.Any(i => i.Id == itemID))
+        {
+            return "ITEM_ALREADY_IN_CART";
+        }
+
+        user.ShopItemsInCart.Add(item);
+        await _dbContext.SaveChangesAsync();
+
+        return "ITEM_ADDED";
+    }
 }

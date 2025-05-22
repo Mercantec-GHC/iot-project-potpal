@@ -6,12 +6,12 @@ namespace Database;
 
 public class PotPalDbContext : DbContext
 {
-     public PotPalDbContext(DbContextOptions<PotPalDbContext> options) : base(options)
-     { }
+    public PotPalDbContext(DbContextOptions<PotPalDbContext> options) : base(options)
+    { }
 
-     public DbSet<User> Users { get; set; }
-     public DbSet<Plant> Plants { get; set; }
-     public DbSet<Metric> Metrics { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Plant> Plants { get; set; }
+    public DbSet<Metric> Metrics { get; set; }
     public DbSet<ShopItem> ShopItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

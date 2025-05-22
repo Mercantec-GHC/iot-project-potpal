@@ -20,4 +20,9 @@ public class ShopService(ShopRepo shopRepo)
     {
         await _shopRepo.AddAsync(shopItem);
     }
+
+    internal async Task<string> AddItemToCartAsync(int itemID, string userToken)
+    {
+        return await _shopRepo.AddItemToCartAsync(itemID, userToken);
+    }
 }

@@ -21,7 +21,7 @@
 				if (newestMetric != null)
 				{
 					<a class="button-unchanged"
-					   href="@($"/plant/details/{plant.GUID}")">
+					   href="@($"/plantdetails/{plant.GUID}")">
 						<PlantWidget Name="@plant.PlantName"
 									 Humidity="@newestMetric.AirHumidity.ToString()"
 									 Temperature="@newestMetric.Temperature.ToString()"
