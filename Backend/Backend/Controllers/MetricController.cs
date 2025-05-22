@@ -15,7 +15,7 @@ public class MetricController : Controller
     public MetricController(MetricService metricService)
     {
         _metricService = metricService;
-         
+
     }
 
     [HttpGet]
@@ -29,10 +29,10 @@ public class MetricController : Controller
         return Ok(metric);
     }
 
-    [HttpGet("{guid}")]
-    public async Task<IActionResult> GetMetricByPlant(string guid)
+    [HttpGet("{token}")]
+    public async Task<IActionResult> GetMetricByPlant(string token)
     {
-        var metric = await _metricService.GetByPlantAsync(guid);
+        var metric = await _metricService.GetByPlantAsync(token);
         if (metric == null)
         {
             return NotFound();
@@ -49,5 +49,4 @@ public class MetricController : Controller
         }
         return Ok(metric);
     }
-
 }
