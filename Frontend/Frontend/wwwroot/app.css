@@ -108,7 +108,7 @@ h1:focus {
     margin: 10px;
 }
 
-.button-unchanged {
+.button-unchanged, .button-unchanged:hover {
     all: unset;
     cursor: pointer;
     display: inline-block;
