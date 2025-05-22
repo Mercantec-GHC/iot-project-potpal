@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Models;
-using Frontend.Repo;
+using PotPalFrontend.Repo;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 
@@ -19,5 +19,6 @@ namespace Frontend.Components.Pages
             UserResult = await userRepo.LoginAsync(userLogin);
             StateHasChanged();
         }
+
     }
 }

@@ -6,21 +6,19 @@ namespace Database;
 
 public class PotPalDbContext : DbContext
 {
-    public PotPalDbContext(DbContextOptions<PotPalDbContext> options) : base(options)
-    { }
+     public PotPalDbContext(DbContextOptions<PotPalDbContext> options) : base(options)
+     { }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Plant> Plants { get; set; }
-    public DbSet<Metric> Metrics { get; set; }
-    public DbSet<ShopItem> ShopItems { get; set; }
-    public DbSet<CartItem> CartItems { get; set; }
+     public DbSet<User> Users { get; set; }
+     public DbSet<Plant> Plants { get; set; }
+     public DbSet<Metric> Metrics { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
+            .HasIndex(u => new { u.Email })
             .IsUnique(true);
 
         modelBuilder.Entity<Metric>()
@@ -35,19 +33,6 @@ public class PotPalDbContext : DbContext
             .WithMany(u => u.Plants)
             .HasForeignKey(p => p.UserEmail)
             .HasPrincipalKey(u => u.Email);
-
-        modelBuilder.Entity<CartItem>()
-            .HasKey(ci => new { ci.UserToken, ci.ItemId });
-
-        modelBuilder.Entity<CartItem>()
-            .HasOne(ci => ci.User)
-            .WithMany(u => u.CartItems)
-            .HasForeignKey(ci => ci.UserToken);
-
-        modelBuilder.Entity<CartItem>()
-            .HasOne(ci => ci.ShopItem)
-            .WithMany(si => si.CartItems)
-            .HasForeignKey(ci => ci.ItemId);
     }
 }
 
