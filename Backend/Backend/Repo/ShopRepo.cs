@@ -29,33 +29,35 @@ public class ShopRepo
         await _dbContext.SaveChangesAsync();
     }
 
-    internal async Task<string> AddItemToCartAsync(int itemID, string userToken)
+    internal async Task<string> AddItemToCartAsync(CartItem cart)
     {
-        var user = await _dbContext.Users
-        .Include(u => u.ShopItemsInCart) // Load cart
-        .FirstOrDefaultAsync(u => u.token == userToken);
-
-        var item = await _dbContext.ShopItems.FindAsync(itemID);
+        var user = await _dbContext.Users.FindAsync(cart.UserToken);
+        var item = await _dbContext.ShopItems.FindAsync(cart.ItemId);
 
         if (user == null || item == null)
         {
             return "USER_OR_ITEM_NOT_FOUND";
         }
 
-        if (user.ShopItemsInCart == null)
+        var existingCartItem = await _dbContext.CartItems
+            .FirstOrDefaultAsync(ci => ci.UserToken == cart.UserToken && ci.ItemId == cart.ItemId);
+
+        if (existingCartItem != null)
         {
-            user.ShopItemsInCart = new List<ShopItem>();
+            existingCartItem.Quantity += 1;
         }
 
-        // Check if item is already in the cart
-        if (user.ShopItemsInCart.Any(i => i.Id == itemID))
+        var cartItem = new CartItem
         {
-            return "ITEM_ALREADY_IN_CART";
-        }
+            UserToken = cart.UserToken,
+            ItemId = cart.ItemId,
+            Quantity = 1
+        };
 
-        user.ShopItemsInCart.Add(item);
+        await _dbContext.CartItems.AddAsync(cartItem);
         await _dbContext.SaveChangesAsync();
 
         return "ITEM_ADDED";
     }
+
 }

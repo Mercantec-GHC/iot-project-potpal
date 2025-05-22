@@ -12,5 +12,5 @@ public class ShopItem
     public string Description { get; set; } = "";
     public float Price { get; set; }
 
-    public List<User> UsersWithThisInCart { get; set; } = new ();
+    public List<CartItem> CartItems { get; set; } = new(); // 👈 Changed
 }

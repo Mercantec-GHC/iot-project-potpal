@@ -51,10 +51,10 @@ public class ShopController : Controller
         return Ok(shopItem);
     }
 
-    [HttpPost("addToCart/{itemID}/{userToken}")]
-    public async Task<IActionResult> AddItemToCartAsync(int itemID, string userToken)
+    [HttpPost("addToCart")]
+    public async Task<IActionResult> AddItemToCartAsync(CartItem cart)
     {
-        var result = await _shopService.AddItemToCartAsync(itemID, userToken);
+        var result = await _shopService.AddItemToCartAsync(cart);
 
         if (result == "ITEM_ALREADY_IN_CART")
         {

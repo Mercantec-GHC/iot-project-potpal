@@ -28,6 +28,7 @@ else
 			</div>
 			<div class="center-content">
 				<div class="add-to-cart">
+					<input type="number" min="1" class="quantity-input"/>
 					<button class="button-centered" @onclick="AddToCart">Add to cart</button>
 				</div>
 			</div>
@@ -66,7 +67,16 @@ else
 		var client = ClientFactory.CreateClient("ApiCall");
 		var userToken = "1";
 		var itemID = product.Id;
-		var status = await client.PostAsync($"shop/addToCart/{itemID}/{userToken}", null);
+		User user = await client.GetFromJsonAsync<User>($"user/{userToken}");
+		CartItem cartItem = new()
+			{
+				User = user,
+				ShopItem = product,
+				UserToken = userToken,
+				ItemId = itemID,
+				Quantity = 1
+			};
+		var status = await client.PostAsJsonAsync($"shop/addToCart", cartItem);
 
 		if (status.StatusCode == HttpStatusCode.OK)
 		{
@@ -74,7 +84,7 @@ else
 		}
 		else if (status.StatusCode == HttpStatusCode.Conflict)
 		{
-			ResponseMessage = "Item is already on your cart";
+			ResponseMessage = "Item is already in your cart";
 		}
 		else
 		{
