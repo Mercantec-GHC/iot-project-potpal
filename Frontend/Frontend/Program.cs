@@ -7,12 +7,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient("ApiCall", client =>
 {
-<<<<<<< HEAD
     client.BaseAddress = new Uri("http://10.133.51.109:6002/api/"); 
-=======
-    //client.BaseAddress = new Uri("http://10.133.51.109:6002/api/"); 
-    client.BaseAddress = new Uri("https://localhost:7192/api/"); 
->>>>>>> parent of f590a74 (Revert "Simon")
 });
 builder.Services.AddHttpClient();
 
