@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 
-namespace PotPalFrontend.Services
+namespace Frontend.Services
 {
     public class UserServices
     {
