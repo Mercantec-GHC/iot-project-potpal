@@ -15,7 +15,6 @@ public class MetricRepo
     {
         return await _dbContext.Metrics
             .Where(m => m.PlantGUID == guid)
-            .Include(m => m.Plant)
             .ToListAsync();
     }
 

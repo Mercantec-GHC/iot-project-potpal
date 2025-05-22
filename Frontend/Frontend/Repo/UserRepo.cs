@@ -1,7 +1,7 @@
 ﻿using Models;
-using Frontend.Services;
+using PotPalFrontend.Services;
 
-namespace Frontend.Repo
+namespace PotPalFrontend.Repo
 {
     public class UserRepo
     {
@@ -30,7 +30,5 @@ namespace Frontend.Repo
         }
 
         
-
-
     }
 }
