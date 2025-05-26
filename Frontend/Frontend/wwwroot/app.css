@@ -198,3 +198,8 @@ h1:focus {
     width: 100%;
     align-items: stretch;
 }
+
+.checkout-product-in.add-to-cart{
+    display: flex;
+    background-color: #e0e0e0
+}

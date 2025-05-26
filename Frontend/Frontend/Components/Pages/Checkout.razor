@@ -1,5 +1,7 @@
 ﻿@page "/checkout"
 
+@inject IHttpClientFactory ClientFactory
+
 <h3>Checkout</h3>
 
 <PageTitle>Checkout</PageTitle>
@@ -7,17 +9,63 @@
 
 <div class="checkout-container">
 	<div class="content-box-checkout">
+		<h3>Items in Cart</h3>
+		<p>@status</p>
+		@if (productsInCart.Count == 0)
+		{
+			<p>Loading...</p>
+		}
+		else
+		{
+			foreach (var product in productsInCart)
+			{
+				<div class="cart-item">
+					<img src="@product.ImagePath" />
+					<h4>@product.ItemName</h4>
+					<p>@($"{product.Price} kr.")</p>
+				</div>
+			}
+		}
 	</div>
 	<div class="content-box-checkout">
 	</div>
-</div> 
+</div>
 
 
 @code {
+	private List<CartItem> cart = new();
 	private List<ShopItem> productsInCart = new();
+	string status;
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
+		var email = "1@example.com";
+		try
+		{
+			if (!string.IsNullOrEmpty(email))
+			{
+				var encodedEmail = Uri.EscapeDataString(email);
+
+				var client = ClientFactory.CreateClient("ApiCall");
+				cart = await client.GetFromJsonAsync<List<CartItem>>($"cart/byUser/{encodedEmail}");
+				status = cart;
+
+				productsInCart = new();
+
+				foreach(CartItem product in cart)
+				{
+					productsInCart.Append(product.ShopItem);
+				}
+			}
+			else
+			{
+				Console.WriteLine("Email claim is missing.");
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching plant data: {ex.Message}");
+		}
 	}
 }
 
