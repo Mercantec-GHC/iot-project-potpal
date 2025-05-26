@@ -25,4 +25,9 @@ public class ShopService(ShopRepo shopRepo)
     {
         return await _shopRepo.AddItemToCartAsync(cart);
     }
+
+    public async Task<IEnumerable<CartItem>> GetCartByUserAsync(string userEmail)
+    {
+        return await _shopRepo.GetCartByUserAsync(userEmail);
+    }
 }

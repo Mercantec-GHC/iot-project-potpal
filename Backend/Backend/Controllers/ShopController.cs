@@ -21,23 +21,23 @@ public class ShopController : Controller
     [HttpGet]
     public async Task<IActionResult> GetAllShopItems()
     {
-        var metric = await _shopService.GetAllAsync();
-        if (metric == null)
+        var product = await _shopService.GetAllAsync();
+        if (product == null)
         {
             return NotFound();
         }
-        return Ok(metric);
+        return Ok(product);
     }
 
     [HttpGet("byID/{ID}")]
     public async Task<IActionResult> GetShopItemByID(int ID)
     {
-        var metric = await _shopService.GetByIDAsync(ID);
-        if (metric == null)
+        var product = await _shopService.GetByIDAsync(ID);
+        if (product == null)
         {
             return NotFound();
         }
-        return Ok(metric);
+        return Ok(product);
     }
     
     [HttpPost]
@@ -67,5 +67,16 @@ public class ShopController : Controller
         }
 
         return Ok(new { code = "ITEM_ADDED", message = "Item added to cart." });
+    }
+
+    [HttpGet("cart/byUser/{userToken}")]
+    public async Task<IActionResult> GetcartByUser(string userToken)
+    {
+        var cartItems = await _shopService.GetCartByUserAsync(userToken);
+        if (cartItems == null)
+        {
+            return NotFound();
+        }
+        return Ok(cartItems);
     }
 }

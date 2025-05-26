@@ -60,4 +60,19 @@ public class ShopRepo
         return "ITEM_ADDED";
     }
 
+    public async Task<IEnumerable<CartItem>> GetCartByUserAsync(string userEmail)
+    {
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+        if(user == null)
+        {
+            throw new KeyNotFoundException("User not found");
+        }
+        return await _dbContext.CartItems
+            .Include(ci => ci.User)
+            .Include(ci => ci.ShopItem)
+            .Where(ci => ci.User.Email == userEmail)
+            .ToListAsync();
+    }
 }
