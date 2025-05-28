@@ -10,7 +10,7 @@ public static class EmailFactory
 
     public static string GetLowMoistureEmail(string UserName, string PlantName, string SoilMoisture, string IdealSoilMoisture)
     {
-        var template = LoadEmailTemplate("LowMoistureEmail.html");
+        var template = LoadEmailTemplate("LowMoisture.html");
         return template.Replace("{UserName}", UserName).Replace("{PlantName}", PlantName).Replace("{SoilMoisture}", SoilMoisture).Replace("{IdealSoilMoisture}", IdealSoilMoisture);
     }
 
@@ -22,7 +22,7 @@ public static class EmailFactory
     public static string GetHumidityAlertEmail(string UserName, string PlantName, string AirHumidity, string IdealAirHumidity)
     {
         var template = LoadEmailTemplate("HumidityAlert.html");
-        return template.Replace("{UserName}", UserName).Replace("{plant}", PlantName).Replace("{AirHumidity}", AirHumidity).Replace("{IdealAirHumidity}", IdealAirHumidity);
+        return template.Replace("{UserName}", UserName).Replace("{plant}", PlantName).Replace("{AirHumidity}", AirHumidity).Replace("{IdealAirHumidity}", IdealAirHumidity).Replace("{PlantName}", PlantName);
     }
     private static string LoadEmailTemplate(string fileName)
     {

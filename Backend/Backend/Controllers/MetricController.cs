@@ -40,8 +40,9 @@ public class MetricController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddMetricAsync(Metric metric)
+    public async Task<IActionResult> AddMetricAsync([FromBody] Metric metric)
     {
+        Console.WriteLine("Got metric: " + System.Text.Json.JsonSerializer.Serialize(metric));
         await _metricService.AddAsync(metric);
         if (metric == null)
         {
