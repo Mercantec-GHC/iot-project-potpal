@@ -1,34 +1,35 @@
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Extensions.Options;
+using MailKit.Net.Smtp;
+using MimeKit;
+using Models;
 
-public class EmailService : IEmailService
+public class EmailService()
 {
-    private readonly EmailSettings _settings;
-
-    public EmailService(IOptions<EmailSettings> options)
+    public async Task SendAsync(Email email)
     {
-        _settings = options.Value;
+        // create message
+        MimeMessage message = new MimeMessage();
+        message.From.Add(new MailboxAddress("PotPal", Config.SMTP_ADDRESS));
+        message.To.Add(new MailboxAddress("", email.Recipient));
+        message.Subject = email.Subject;
+        message.Body = new TextPart("HTML") { Text = email.Body };
+
+        // send message
+        using (var smtpClient = new SmtpClient())
+        {
+            try
+            {
+                await smtpClient.ConnectAsync(Config.SMTP_ADDRESS, int.Parse(Config.SMTP_PORT), true);
+                await smtpClient.AuthenticateAsync(Config.SMTP_USER, Config.SMTP_PASSWORD);
+
+                await smtpClient.SendAsync(message);
+                await smtpClient.DisconnectAsync(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error sending email " + ex.Message);
+            }
+        }
     }
 
-    public async Task SendEmailAsync(string to, string subject, string body)
-    {
-        var message = new MailMessage
-        {
-            From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = false
-        };
 
-        message.To.Add(new MailAddress(to));
-
-        using var client = new SmtpClient(_settings.SmtpServer, _settings.Port)
-        {
-            Credentials = new NetworkCredential(_settings.Username, _settings.Password),
-            EnableSsl = true
-        };
-
-        await client.SendMailAsync(message);
-    }
 }

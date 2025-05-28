@@ -16,5 +16,6 @@ public class Plant
     public List<Metric> Metrics { get; set; } = new();
 
     [ForeignKey("UserEmail")]
-    public User User { get; set; } = null!;
+    [System.Text.Json.Serialization.JsonIgnore]
+    public User? User { get; set; } = null!;
 }
