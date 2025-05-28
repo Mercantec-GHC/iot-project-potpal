@@ -1,9 +1,12 @@
 ﻿<div class="shop-item">
 	<div class="image">
-		<img src="@ImageSource"/>
+		<img src="@ImageSource" />
 	</div>
 	<div class="item-name">
 		<h4>@Name</h4>
+	</div>
+	<div class="item-price">
+		<h4>@($"{Price} kr.")</h4>
 	</div>
 </div>
 
@@ -13,4 +16,7 @@
 
 	[Parameter]
 	public string ImageSource { get; set; } = "/img/arduino.jpg";
+
+	[Parameter]
+	public float Price { get; set; }
 }

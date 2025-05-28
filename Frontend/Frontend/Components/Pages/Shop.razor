@@ -7,7 +7,7 @@
 <h1>Shop</h1>
 @foreach (Models.ShopItem shopItem in shopItems)
 {
-	<a class="button-unchanged" href=@($"/shop/{shopItem.Id}")><ShopItemComponent Name="@shopItem.ItemName" /></a>
+	<a class="button-unchanged" href=@($"/shop/{shopItem.Id}")><ShopItemComponent Name="@shopItem.ItemName" ImageSource="@shopItem.ImagePath" Price="@shopItem.Price"/></a>
 }
 
 @code {

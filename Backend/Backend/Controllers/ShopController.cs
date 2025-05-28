@@ -1,6 +1,8 @@
 using Database;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Stripe;
+using Stripe.Checkout;
 
 namespace Backend.Controllers;
 
@@ -9,7 +11,7 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class ShopController : Controller
 {
-   
+
     private readonly ShopService _shopService;
 
     public ShopController(ShopService shopService)
@@ -39,7 +41,7 @@ public class ShopController : Controller
         }
         return Ok(product);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddShopItemAsync(ShopItem shopItem)
     {
@@ -79,4 +81,39 @@ public class ShopController : Controller
         }
         return Ok(cartItems);
     }
+
+    public class CheckoutRequest
+    {
+        public string UserToken { get; set; } = string.Empty;
+    }
+
+    [HttpPost("checkout")]
+    public async Task<IActionResult> CreatePaymentIntent([FromBody] CheckoutRequest request)
+    {
+        if (string.IsNullOrEmpty(request.UserToken))
+            return BadRequest("User token is required");
+
+        var cartItems = await _shopService.GetCartByUserAsync(request.UserToken);
+        if (cartItems == null || !cartItems.Any())
+            return BadRequest("Cart is empty");
+
+        var totalAmount = cartItems.Sum(item => item.ShopItem.Price * item.Quantity);
+        var amountInÿre = (long)(totalAmount * 100); // Stripe uses the smallest currency unit
+
+        var options = new PaymentIntentCreateOptions
+        {
+            Amount = amountInÿre,
+            Currency = "dkk",
+            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+            {
+                Enabled = true,
+            }
+        };
+
+        var service = new PaymentIntentService();
+        var intent = await service.CreateAsync(options);
+
+        return Ok(new { clientSecret = intent.ClientSecret });
+    }
+
 }

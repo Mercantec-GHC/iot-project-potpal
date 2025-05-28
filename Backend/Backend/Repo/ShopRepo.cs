@@ -1,5 +1,6 @@
 using System;
 using Database;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
@@ -44,7 +45,7 @@ public class ShopRepo
 
         if (existingCartItem != null)
         {
-            existingCartItem.Quantity += 1;
+            return "ITEM_ALREADY_IN_CART";
         }
 
         var cartItem = new CartItem

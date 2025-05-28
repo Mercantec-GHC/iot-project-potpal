@@ -199,7 +199,21 @@ h1:focus {
     align-items: stretch;
 }
 
-.checkout-product-in.add-to-cart{
+.checkout-product-in-cart {
     display: flex;
+    padding: 10px;
+    margin: 10px;
     background-color: #e0e0e0
 }
+
+    .checkout-product-in-cart img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .checkout-product-in-cart p {
+        text-align: right;
+        font-size: 50px;
+        margin-right: 0;
+        margin-left: auto;
+    }

@@ -1,71 +1,143 @@
 ﻿@page "/checkout"
-
+@inject IJSRuntime JSRuntime
 @inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
 
 <h3>Checkout</h3>
 
 <PageTitle>Checkout</PageTitle>
 
-
 <div class="checkout-container">
-	<div class="content-box-checkout">
-		<h3>Items in Cart</h3>
-		<p>@status</p>
-		@if (productsInCart.Count == 0)
-		{
-			<p>Loading...</p>
-		}
-		else
-		{
-			foreach (var product in productsInCart)
-			{
-				<div class="cart-item">
-					<img src="@product.ImagePath" />
-					<h4>@product.ItemName</h4>
-					<p>@($"{product.Price} kr.")</p>
-				</div>
-			}
-		}
-	</div>
-	<div class="content-box-checkout">
-	</div>
+    <div class="content-box-checkout">
+        <h3>Items in Cart</h3>
+        @if (productsInCart.Count == 0)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            foreach (var product in productsInCart)
+            {
+                <div class="checkout-product-in-cart">
+                    <img src="@product.ImagePath" />
+                    <h4 style="margin:10px">@product.ItemName</h4>
+                    <p>@($"{product.Price} kr.")</p>
+                </div>
+            }
+            <div class="d-flex justify-content-end">
+                <h3>@($"Total: {totalCost} kr.")</h3>
+            </div>
+        }
+    </div>
+
+    <div class="content-box-checkout">
+        <form id="payment-form">
+            <div id="payment-element"><!-- Stripe Elements injects card here --></div>
+            <button id="submit" type="button" class="button-centered" @onclick="SubmitPayment">Pay</button>
+            <div id="payment-message">@paymentMessage</div>
+        </form>
+    </div>
 </div>
 
-
 @code {
-	private List<CartItem> cart = new();
-	private List<ShopItem> productsInCart = new();
-	string status;
+    private List<CartItem> cart = new();
+    private List<ShopItem> productsInCart = new();
+    float totalCost = 0;
+    string clientSecret = string.Empty;
+    string paymentMessage = string.Empty;
 
-	protected override async Task OnInitializedAsync()
-	{
-		var email = "1@example.com";
-		try
-		{
-			if (!string.IsNullOrEmpty(email))
-			{
-				var encodedEmail = Uri.EscapeDataString(email);
+    // Your Stripe publishable key (put it in config/env ideally)
+    private string publishableKey = string.Empty;
 
-				var client = ClientFactory.CreateClient("ApiCall");
-				cart = await client.GetFromJsonAsync<List<CartItem>>($"cart/byUser/{encodedEmail}");
-				status = cart;
+    protected override async Task OnInitializedAsync()
+    {
+        var email = "1@example.com";
+        try
+        {
+            if (!string.IsNullOrEmpty(email))
+            {
+                publishableKey = Configuration["Stripe:PublishableKey"];
+                var encodedEmail = Uri.EscapeDataString(email);
+                var client = ClientFactory.CreateClient("ApiCall");
 
-				productsInCart = new();
+                cart = await client.GetFromJsonAsync<List<CartItem>>($"Shop/cart/byUser/{encodedEmail}");
 
-				foreach(CartItem product in cart)
-				{
-					productsInCart.Append(product.ShopItem);
-				}
-			}
-			else
-			{
-				Console.WriteLine("Email claim is missing.");
-			}
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"Error fetching plant data: {ex.Message}");
-		}
-	}
+                productsInCart = new();
+                foreach (CartItem product in cart)
+                {
+                    productsInCart.Add(product.ShopItem);
+                    totalCost += product.ShopItem.Price;
+                }
+
+                // Fetch PaymentIntent clientSecret
+                var response = await client.PostAsJsonAsync("/api/shop/checkout", new { UserToken = email });
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<PaymentIntentResponse>();
+                    clientSecret = result?.ClientSecret ?? "";
+                }
+                else
+                {
+                    paymentMessage = "Failed to create PaymentIntent.";
+                }
+            }
+            else
+            {
+                paymentMessage = "User email missing.";
+            }
+        }
+        catch (Exception ex)
+        {
+            paymentMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(clientSecret))
+        {
+            await JSRuntime.InvokeVoidAsync("initializeStripeElements", clientSecret, publishableKey);
+        }
+    }
+
+    private async Task SubmitPayment()
+    {
+        var result = await JSRuntime.InvokeAsync<StripePaymentResult>("submitStripePayment");
+
+        if (result.Error != null)
+        {
+            paymentMessage = $"Payment failed: {result.Error.Message}";
+        }
+        else if (result.PaymentIntent != null && result.PaymentIntent.Status == "succeeded")
+        {
+            paymentMessage = "Payment succeeded! Thank you.";
+        }
+        else
+        {
+            paymentMessage = "Payment processing...";
+        }
+
+        StateHasChanged();
+    }
+
+    private class PaymentIntentResponse
+    {
+        public string ClientSecret { get; set; } = string.Empty;
+    }
+
+    private class StripePaymentResult
+    {
+        public StripeError? Error { get; set; }
+        public StripePaymentIntent? PaymentIntent { get; set; }
+    }
+
+    private class StripeError
+    {
+        public string Message { get; set; } = string.Empty;
+    }
+
+    private class StripePaymentIntent
+    {
+        public string Status { get; set; } = string.Empty;
+    }
 }
-
