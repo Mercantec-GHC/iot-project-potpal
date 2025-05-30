@@ -8,8 +8,10 @@
 MKRIoTCarrier carrier;
 
 // WiFi settings
-char ssid[] = "Datahouse WIFI OLC";
-char pass[] = "Merc1234!";
+//char ssid[] = "Datahouse WIFI OLC";
+//char pass[] = "Merc1234!";
+char ssid[] = "ICO-603985_plus";
+char pass[] = "ovUtocUfEan8!";
 
 // API server settings
 char serverAddress[] = "10.133.51.109"; // Backend IP
@@ -199,4 +201,7 @@ void showWiFiStatus(const char* message) {
   carrier.display.fillScreen(ST77XX_BLACK);
   carrier.display.setTextColor(ST77XX_WHITE);
   carrier.display.setTextSize(2);
-  int16_t x = 10, y = carrie_
+  int16_t x = 10, y = carrier.display.height() / 2 - 10;
+  carrier.display.setCursor(x, y);
+  carrier.display.print(message);
+}

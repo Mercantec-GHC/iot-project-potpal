@@ -1,5 +1,6 @@
 public class PlantPostDTO
-{
+{   
+    public string Guid { get; set; } = "";
     public string PlantName { get; set; } = "";
     public float IdealSoilMoisture { get; set; }
     public float IdealTemperature { get; set; }

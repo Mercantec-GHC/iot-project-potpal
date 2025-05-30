@@ -46,7 +46,7 @@ public class PlantRepo
         // Create a new Plant entity from the DTO
         Plant createPlant = new Plant
         {
-            GUID = Guid.NewGuid().ToString(),
+            GUID = newPlant.Guid,
             PlantName = newPlant.PlantName,
             IdealSoilMoisture = newPlant.IdealSoilMoisture,
             IdealTemperature = newPlant.IdealTemperature,
