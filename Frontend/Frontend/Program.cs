@@ -12,6 +12,7 @@ builder.Services.AddHttpClient("ApiCall", client =>
     client.BaseAddress = new Uri("https://localhost:1"); 
 });
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IPlantRepo, PlantRepo>();
 builder.Services.AddSingleton<IUserAuth, UserAuth>();
 builder.Services.AddHttpClient();
 

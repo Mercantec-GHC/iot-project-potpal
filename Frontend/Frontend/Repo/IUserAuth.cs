@@ -6,5 +6,6 @@ namespace Frontend.Repo
     {
         User GetUser();
         User SetUser(User userResult);
+        string GetToken();
     }
 }

@@ -1,6 +1,9 @@
+using Backend.Models;
 using Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.Security.Claims;
 
 namespace Backend.Controllers;
 
@@ -26,10 +29,18 @@ public class PlantController : ControllerBase
         return Ok(plants);
     }
 
-    [HttpGet("byGuid/{guid}")]
+    [HttpGet("byGuid")]
+    [Authorize]
     public async Task<IActionResult> GetPlantByGuid(string guid)
     {
-        var plant = await _plantService.GetByGuidAsync(guid);
+        var emailFromToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if(string.IsNullOrEmpty(emailFromToken))
+        {
+            return Unauthorized("User not authenticated or error");
+        }
+
+
+        var plant = await _plantService.GetByGuidAsync(guid, emailFromToken);
         if (plant == null)
         {
             return NotFound("Plant not found.");
@@ -73,10 +84,17 @@ public class PlantController : ControllerBase
         }
     }
 
-    [HttpPut("{guid}")]
-    public async Task<IActionResult> UpdatePlantAsync(string guid, [FromBody] Plant plant)
+    [HttpPut("UpdatePlant")]
+    [Authorize]
+    public async Task<IActionResult> UpdatePlantAsync([FromBody] PlantDTO plant)
     {
-        var existingPlant = await _plantService.GetByGuidAsync(guid);
+        var emailFromToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(emailFromToken))
+        {
+            return Unauthorized("User not authenticated or error");
+        }
+
+        var existingPlant = await _plantService.GetByGuidAsync(plant.GUID, emailFromToken);
         if (existingPlant == null)
         {
             return NotFound("Plant not found.");

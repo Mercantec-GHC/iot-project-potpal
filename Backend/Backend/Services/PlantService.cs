@@ -1,12 +1,13 @@
+using Backend.Models;
 using Models;
 
 public class PlantService(PlantRepo plantRepo)
 {
     private readonly PlantRepo _plantRepo = plantRepo;
 
-    public async Task<Plant?> GetByGuidAsync(string guid)
+    public async Task<Plant?> GetByGuidAsync(string guid, string email)
     {
-        return await _plantRepo.GetByGuidAsync(guid);
+        return await _plantRepo.GetByGuidAsync(guid, email);
     }
     public async Task<IEnumerable<Plant>> GetByUserAsync(string email)
     {
@@ -23,8 +24,19 @@ public class PlantService(PlantRepo plantRepo)
         await _plantRepo.AddAsync(plant);
     }
    
-    public async Task UpdateAsync(Plant plant)
+    public async Task UpdateAsync(PlantDTO plant)
     {
-        await _plantRepo.UpdateAsync(plant);
+        Plant EntityPlant = new Plant
+        {
+            GUID = plant.GUID,
+            PlantName = plant.PlantName,
+            IdealSoilMoisture = plant.IdealSoilMoisture,
+            IdealTemperature = plant.IdealTemperature,
+            IdealLightLevel = plant.IdealLightLevel,
+            IdealAirHumidity = plant.IdealAirHumidity,
+            UserEmail = plant.UserEmail,
+        };
+
+        await _plantRepo.UpdateAsync(EntityPlant);
     }
 }

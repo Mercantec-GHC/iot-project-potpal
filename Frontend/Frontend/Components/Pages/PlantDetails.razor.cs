@@ -13,7 +13,10 @@ namespace Frontend.Components.Pages
 
         [Parameter]
         public required string PlantId { get; set; }
-        PlantRepo plantRepo = new PlantRepo();
+
+        [Inject]
+        public IPlantRepo plantRepo { get; set; }
+
         public Plant plantData {  get; set; }
 
         public User UserResult { get; set; } = new User();
@@ -31,7 +34,10 @@ namespace Frontend.Components.Pages
             
         }
 
-
+        public async Task SaveChangesAsync()
+        {
+           bool succes = await plantRepo.UpdatePlantInformationAsync(plantData);
+        }
 
     }
 }

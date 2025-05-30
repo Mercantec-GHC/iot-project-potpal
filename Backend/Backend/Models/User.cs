@@ -9,10 +9,9 @@ public class User
     public string? UserName { get; set; }
     public string Password { get; set; } = "";
 
-   
-    [Required]
-    [EmailAddress]
+
     [Key]
+    [EmailAddress]
     public string Email { get; set; } = "";
     public List<Plant>? Plants { get; set; } = new();
 }
