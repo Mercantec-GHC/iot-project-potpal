@@ -1,4 +1,3 @@
-using Database;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -9,7 +8,7 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class MetricController : Controller
 {
-   
+
     private readonly MetricService _metricService;
 
     public MetricController(MetricService metricService)
@@ -39,9 +38,11 @@ public class MetricController : Controller
         }
         return Ok(metric);
     }
-    
-    [HttpPost]public async Task<IActionResult> AddMetricAsync(Metric metric)
+
+    [HttpPost]
+    public async Task<IActionResult> AddMetricAsync([FromBody] Metric metric)
     {
+        Console.WriteLine("Got metric: " + System.Text.Json.JsonSerializer.Serialize(metric));
         await _metricService.AddAsync(metric);
         if (metric == null)
         {
@@ -49,5 +50,21 @@ public class MetricController : Controller
         }
         return Ok(metric);
     }
-
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateMetricAsync(Metric metric)
+    {
+        await _metricService.UpdateAsync(metric);
+        if (metric == null)
+        {
+            return NotFound();
+        }
+        return Ok(metric);
+    }
+    [HttpDelete("{guid}")]
+    public async Task<IActionResult> DeleteMetricAsync(string guid)
+    {
+        await _metricService.DeleteAsync(guid);
+        return NoContent();
+    }
 }

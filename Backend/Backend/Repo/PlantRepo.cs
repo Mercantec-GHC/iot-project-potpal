@@ -34,14 +34,30 @@ public class PlantRepo
             .ToListAsync();
     }
 
-    public async Task<Plant> AddAsync(Plant newPlant)
+    public async Task<Plant> AddAsync(PlantPostDTO newPlant)
     {
-        // Prevent EF from inserting the User entity again
-        _context.Entry(newPlant.User).State = EntityState.Unchanged;
+        // Check if the user exists
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == newPlant.UserEmail);
+        if (user == null)
+            throw new Exception("User not found");
 
-        _context.Plants.Add(newPlant);
+
+
+        // Create a new Plant entity from the DTO
+        Plant createPlant = new Plant
+        {
+            GUID = newPlant.Guid,
+            PlantName = newPlant.PlantName,
+            IdealSoilMoisture = newPlant.IdealSoilMoisture,
+            IdealTemperature = newPlant.IdealTemperature,
+            IdealLightLevel = newPlant.IdealLightLevel,
+            IdealAirHumidity = newPlant.IdealAirHumidity,
+            UserEmail = newPlant.UserEmail
+        };
+
+        _context.Plants.Add(createPlant);
         await _context.SaveChangesAsync();
-        return newPlant;
+        return createPlant;
     }
 
     public async Task<Plant> UpdateAsync(Plant updatedPlant)

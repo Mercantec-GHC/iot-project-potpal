@@ -3,34 +3,36 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuration
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
+// Stripe setup
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"]
     ?? throw new InvalidOperationException("Stripe SecretKey is not configured.");
 
+// Database context
 builder.Services.AddDbContext<PotPalDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllers(options =>
-{
-})
-.AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
+// Controllers and JSON options
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
@@ -58,6 +60,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Dependency injection
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<MetricService>();
@@ -66,7 +69,12 @@ builder.Services.AddScoped<PlantService>();
 builder.Services.AddScoped<PlantRepo>();
 builder.Services.AddScoped<ShopService>();
 builder.Services.AddScoped<ShopRepo>();
+builder.Services.AddScoped<EmailService>();
 
+// Optional: custom config init
+Config.Init(builder);
+
+// JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
@@ -84,10 +92,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
-
 var app = builder.Build();
 
+// Middleware pipeline
 app.UseSwagger();
 app.UseSwaggerUI();
 
