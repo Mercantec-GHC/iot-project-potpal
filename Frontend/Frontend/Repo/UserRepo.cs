@@ -1,10 +1,11 @@
-using Frontend.Repo;
+
 using Models;
 using Frontend.Services;
+using Frontend.Repo;
 
 namespace Frontend.Repo
 {
-    public class UserRepo : IUserRepo
+    public class UserRepo : IUserRepo   
     {
         IUserAuth userAuth;
         public UserRepo(IUserAuth userAuth)
