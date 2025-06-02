@@ -18,10 +18,12 @@ public class MetricRepo
                         .FirstOrDefaultAsync(p => p.GUID == plantGuid);
     }
 
-    public async Task<Metric?> GetByPlantGUIDAsync(string guid)
+    public async Task<List<Metric>> GetByPlantGUIDAsync(string plantGuid)
     {
         return await _dbContext.Metrics
-                    .FirstOrDefaultAsync(m => m.PlantGUID == guid);
+             .Where(m => m.PlantGUID == plantGuid)
+             .OrderBy(m => m.Timestamp)
+             .ToListAsync();
     }
 
     public async Task<IEnumerable<Metric>> GetAllAsync()
