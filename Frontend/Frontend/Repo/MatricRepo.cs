@@ -8,10 +8,10 @@ namespace Frontend.Repo
         public class PlantRepo
         {
             PlantServices plantService = new PlantServices();
-            public async Task<Plant> PlantData(string plantGuid)
+            public async Task<Plant> PlantData(string plantGuid, string email)
             {
                 if (string.IsNullOrEmpty(plantGuid)) return null;
-                return await plantService.PlantData(plantGuid);
+                return await plantService.PlantData(plantGuid, email);
 
             }
         }

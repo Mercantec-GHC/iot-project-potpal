@@ -81,12 +81,13 @@ public class UserRepo
 
         return new UserDTO
         {
+            Email = user.Email ?? string.Empty,
             UserName = user.UserName ?? string.Empty,
             Token = Token,
         };
     }
 
-    private string GenerateToken(string userName)
+    private string GenerateToken(string email)
     {
         var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
@@ -94,7 +95,7 @@ public class UserRepo
 
         var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userName)
+                new Claim(ClaimTypes.NameIdentifier, email)
             };
 
         var token = new JwtSecurityToken(
@@ -102,7 +103,7 @@ public class UserRepo
             _configuration["Jwt:Issuer"],
             _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddDays(7),
+            expires: DateTime.Now.AddDays(1),
             signingCredentials: credentials
         );
 
