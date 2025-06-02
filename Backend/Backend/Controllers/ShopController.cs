@@ -101,11 +101,11 @@ public class ShopController : Controller
 
         // Calculate total amount (assumes price is in DKK)
         var totalAmount = cartItems.Sum(item => item.ShopItem.Price * item.Quantity);
-        var amountInÿre = (long)(totalAmount * 100); // Stripe expects smallest currency unit
+        var amountInOre = (long)(totalAmount * 100); // Stripe expects smallest currency unit
 
         var options = new PaymentIntentCreateOptions
         {
-            Amount = amountInÿre,
+            Amount = amountInOre,
             Currency = "dkk",
             AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
             {
