@@ -65,14 +65,14 @@ else
 	async Task AddToCart()
 	{
 		var client = ClientFactory.CreateClient("ApiCall");
-		var userToken = "1";
+		var userEmail = "1@example.com";
 		var itemID = product.Id;
-		User user = await client.GetFromJsonAsync<User>($"user/{userToken}");
+		User user = await client.GetFromJsonAsync<User>($"user/{userEmail}");
 		CartItem cartItem = new()
 			{
 				User = user,
 				ShopItem = product,
-				UserToken = userToken,
+				UserToken = user.Token,
 				ItemId = itemID,
 				Quantity = 1
 			};

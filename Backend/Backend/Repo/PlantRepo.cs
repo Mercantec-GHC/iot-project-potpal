@@ -17,12 +17,12 @@ public class PlantRepo
         return await _context.Plants.Include(p => p.User).Include(p => p.Metrics).ToListAsync();
     }
 
-    public async Task<Plant?> GetByGuidAsync(string guid)
+    public async Task<Plant?> GetByGuidAsync(string guid, string email)
     {
         return await _context.Plants
-            .Include(p => p.User)
+            //.Include(p => p.User)
             .Include(p => p.Metrics)
-            .FirstOrDefaultAsync(p => p.GUID == guid);
+            .FirstOrDefaultAsync(p => p.GUID == guid && p.UserEmail == email);
     }
 
     public async Task<List<Plant>> GetByUserAsync(string email)
@@ -79,9 +79,14 @@ public class PlantRepo
         existing.UserEmail = updatedPlant.UserEmail;
 
         // Prevent EF from trying to insert/update the User entity
-        _context.Entry(existing.User).State = EntityState.Unchanged;
+        _context.Entry(existing).Reference(p => p.User).IsModified = false;
 
-        await _context.SaveChangesAsync();
+        // Result is x rows affected
+        int result = await _context.SaveChangesAsync();
+        if(result <= 0)
+        {
+            return null;
+        }
         return existing;
     }
 }

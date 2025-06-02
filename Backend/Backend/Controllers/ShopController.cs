@@ -1,6 +1,8 @@
 using Database;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Stripe;
+using Stripe.Checkout;
 
 namespace Backend.Controllers;
 
@@ -9,13 +11,14 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class ShopController : Controller
 {
-   
-    private readonly ShopService _shopService;
 
-    public ShopController(ShopService shopService)
+    private readonly ShopService _shopService;
+    private readonly ILogger<ShopController> _logger;
+
+    public ShopController(ShopService shopService, ILogger<ShopController> logger)
     {
         _shopService = shopService;
-
+        _logger = logger;
     }
 
     [HttpGet]
@@ -39,7 +42,7 @@ public class ShopController : Controller
         }
         return Ok(product);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddShopItemAsync(ShopItem shopItem)
     {
@@ -79,4 +82,54 @@ public class ShopController : Controller
         }
         return Ok(cartItems);
     }
+
+    public class CheckoutRequest
+    {
+        public string UserToken { get; set; } = string.Empty;
+    }
+
+    [HttpPost("checkout")]
+    public async Task<IActionResult> CreatePaymentIntent([FromBody] CheckoutRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.UserToken))
+            return BadRequest(new { error = "User token is required." });
+
+        var cartItems = await _shopService.GetCartByUserAsync(request.UserToken);
+
+        if (cartItems == null || !cartItems.Any())
+            return BadRequest(new { error = "Cart is empty." });
+
+        // Calculate total amount (assumes price is in DKK)
+        var totalAmount = cartItems.Sum(item => item.ShopItem.Price * item.Quantity);
+        var amountInOre = (long)(totalAmount * 100); // Stripe expects smallest currency unit
+
+        var options = new PaymentIntentCreateOptions
+        {
+            Amount = amountInOre,
+            Currency = "dkk",
+            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+            {
+                Enabled = true
+            }
+        };
+
+        try
+        {
+            var service = new PaymentIntentService();
+            var intent = await service.CreateAsync(options);
+
+            return Ok(new { ClientSecret = intent.ClientSecret });
+        }
+        catch (StripeException ex)
+        {
+            _logger.LogError(ex, "StripeException while creating PaymentIntent: {Message}", ex.Message);
+            return StatusCode(500, new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unhandled exception in CreatePaymentIntent");
+            return StatusCode(500, new { error = "Internal server error" });
+        }
+    }
+
 }
