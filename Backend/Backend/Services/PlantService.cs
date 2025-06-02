@@ -19,9 +19,9 @@ public class PlantService(PlantRepo plantRepo)
         return await _plantRepo.GetAllAsync();
     }
 
-    public async Task AddAsync(Plant plant)
+    public async Task AddAsync(PlantPostDTO plantDTO)
     {
-        await _plantRepo.AddAsync(plant);
+        await _plantRepo.AddAsync(plantDTO);
     }
    
     public async Task UpdateAsync(PlantDTO plant)

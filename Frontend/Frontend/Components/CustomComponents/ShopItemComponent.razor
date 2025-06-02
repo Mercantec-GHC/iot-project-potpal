@@ -1,0 +1,16 @@
+﻿<div class="shop-item">
+	<div class="image">
+		<img src="@ImageSource"/>
+	</div>
+	<div class="item-name">
+		<h4>@Name</h4>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string Name { get; set; } = "Name";
+
+	[Parameter]
+	public string ImageSource { get; set; } = "/img/arduino.jpg";
+}

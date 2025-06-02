@@ -60,22 +60,22 @@ public class PlantController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPlantAsync([FromBody] Plant plant)
+    public async Task<IActionResult> AddPlantAsync([FromBody] PlantPostDTO plantDTO)
     {
-        if (plant == null)
+        if (plantDTO == null)
         {
             return BadRequest("Invalid plant object.");
         }
 
-        // Map email from user object if it's included
-        if (plant.User != null && !string.IsNullOrEmpty(plant.User.Email))
+        if (string.IsNullOrEmpty(plantDTO.UserEmail))
         {
-            plant.UserEmail = plant.User.Email;
+            return BadRequest("User email is required.");
         }
+        
 
         try
         {
-            await _plantService.AddAsync(plant);
+            await _plantService.AddAsync(plantDTO);
             return Ok();
         }
         catch (Exception ex)

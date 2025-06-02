@@ -46,6 +46,14 @@ public class UserRepo
         }
 
         string Token = GenerateToken(createUser.UserName);
+       
+        Email email = new Email
+        {
+            Recipient = userDTO.Email,
+            Subject = "Welcome to PotPal",
+            Body = EmailFactory.GetWelcomeEmail(userDTO.UserName)
+        };
+        await new EmailService().SendAsync(email);
 
         return new UserDTO
         {

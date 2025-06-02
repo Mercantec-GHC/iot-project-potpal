@@ -1,6 +1,5 @@
 ﻿using Frontend.Services;
 using Models;
-using PotPalFrontend.Services;
 
 namespace Frontend.Repo
 {
