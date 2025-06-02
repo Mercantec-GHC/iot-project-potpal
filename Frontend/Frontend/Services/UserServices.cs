@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Frontend.Repo;
+using Models;
 using Newtonsoft.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -10,6 +11,8 @@ namespace Frontend.Services
 {
     public class UserServices
     {
+        
+
         // HttpClient is supost to only be instanuated onse rather then per use
         HttpClient Http = new HttpClient();
 
@@ -37,6 +40,7 @@ namespace Frontend.Services
             if (httpResponse.IsSuccessStatusCode)
             {
                 UserDTO user = JsonConvert.DeserializeObject<UserDTO>(await httpResponse.Content.ReadAsStringAsync());
+                
                 if (user != null) return user;
             }
             return null;
