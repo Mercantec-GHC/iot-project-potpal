@@ -1,6 +1,10 @@
 ﻿@page "/"
+@using Frontend.Repo;
+@using Microsoft.AspNetCore.Components;
+@using Models;
 @inject IHttpClientFactory ClientFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserAuth userAuth
 
 
 <PageTitle>My plants</PageTitle>
@@ -21,12 +25,12 @@
 				if (newestMetric != null)
 				{
 					<a class="button-unchanged"
-					   href="@($"/plantdetails/{plant.GUID}")">
+					href="@($"/plantdetails/{plant.GUID}")">
 						<PlantWidget Name="@plant.PlantName"
-									 Humidity="@newestMetric.AirHumidity.ToString()"
-									 Temperature="@newestMetric.Temperature.ToString()"
-									 Moisture="@newestMetric.SoilMoisture.ToString()"
-									 LightLevel="@newestMetric.LightLevel.ToString()" />
+						Humidity="@newestMetric.AirHumidity.ToString()"
+						Temperature="@newestMetric.Temperature.ToString()"
+						Moisture="@newestMetric.SoilMoisture.ToString()"
+						LightLevel="@newestMetric.LightLevel.ToString()" />
 					</a>
 				}
 				else
@@ -46,15 +50,14 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var email = "1@example.com";
 		try
 		{
 			var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-			var user = authState.User;
+			var user = userAuth.GetUser();
 
-			// if (user.Identity?.IsAuthenticated ?? false)
-			// {
-				//var email = user.FindFirst(ClaimTypes.Email)?.Value;
+			if (user != null)
+			{
+				var email = user.Email;
 
 				if (!string.IsNullOrEmpty(email))
 				{
@@ -69,11 +72,12 @@
 				{
 					Console.WriteLine("Email claim is missing.");
 				}
-			// }
-			// else
-			// {
-			// 	Console.WriteLine("User is not authenticated.");
-			// }
+			}
+			else
+			{
+				Console.WriteLine("User is not authenticated.");
+			}
+			StateHasChanged();
 		}
 		catch (Exception ex)
 		{

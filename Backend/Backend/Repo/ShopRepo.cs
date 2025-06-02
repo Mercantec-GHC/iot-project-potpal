@@ -32,7 +32,7 @@ public class ShopRepo
 
     internal async Task<string> AddItemToCartAsync(CartItem cart)
     {
-        var user = await _dbContext.Users.FindAsync(cart.UserToken);
+        var user = await _dbContext.Users.FindAsync(cart.UserEmail);
         var item = await _dbContext.ShopItems.FindAsync(cart.ItemId);
 
         if (user == null || item == null)
@@ -41,7 +41,7 @@ public class ShopRepo
         }
 
         var existingCartItem = await _dbContext.CartItems
-            .FirstOrDefaultAsync(ci => ci.UserToken == cart.UserToken && ci.ItemId == cart.ItemId);
+            .FirstOrDefaultAsync(ci => ci.UserEmail == cart.UserEmail && ci.ItemId == cart.ItemId);
 
         if (existingCartItem != null)
         {
@@ -50,7 +50,7 @@ public class ShopRepo
 
         var cartItem = new CartItem
         {
-            UserToken = cart.UserToken,
+            UserEmail = cart.UserEmail,
             ItemId = cart.ItemId,
             Quantity = 1
         };

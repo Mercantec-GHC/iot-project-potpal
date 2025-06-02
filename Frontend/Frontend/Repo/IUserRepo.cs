@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace PotPalFrontend.Repo
+namespace Frontend.Repo
 {
     public interface IUserRepo
     {

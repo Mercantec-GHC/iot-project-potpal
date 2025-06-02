@@ -1,5 +1,6 @@
-
+using Frontend.Components;
 using Frontend.Repo;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,19 +12,17 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient("ApiCall", client =>
 {
-    //client.BaseAddress = new Uri("http://10.133.51.109:6002/api/");
-    client.BaseAddress = new Uri("https://localhost:7192/api/");
+    client.BaseAddress = new Uri("http://10.133.51.109:6002/api/");
 });
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPlantRepo, PlantRepo>();
-builder.Services.AddSingleton<IUserAuth, UserAuth>();
+builder.Services.AddSingleton<IUserAuth, UserAuth>(); 
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // Detailed error page for development
     app.UseDeveloperExceptionPage();
 }
 else
@@ -41,15 +40,14 @@ app.Use(async (context, next) =>
 {
     context.Response.Headers["Content-Security-Policy"] =
         "default-src 'self'; " +
-        "script-src 'self' https://js.stripe.com https://m.stripe.network " +
-        "'sha256-5DA+a07wxWmEka9IdoWjSPVHb17Cp5284/lJzfbl8KA=' " +
-        "'sha256-/5Guo2nzv5n/w6ukZpOBZOtTJBJPSkJ6mhHpnBgm3Ls='; " +
-        "style-src 'self' https://m.stripe.network 'unsafe-inline'; " +
+        "script-src 'self' 'unsafe-inline' https://js.stripe.com https://m.stripe.network; " +
+        "style-src 'self' 'unsafe-inline' https://m.stripe.network https://*.stripe.com; " +
         "img-src 'self' data: https://*.stripe.com; " +
-        "connect-src 'self' https://api.stripe.com https://m.stripe.network; " +
-        "frame-src https://js.stripe.com;";
+        "connect-src 'self' http://localhost:* https://api.stripe.com https://m.stripe.network https://localhost:7192 ws://localhost:* wss://localhost:*; " +
+        "frame-src https://js.stripe.com https://*.stripe.com;";
     await next();
 });
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

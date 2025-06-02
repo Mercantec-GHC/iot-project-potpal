@@ -36,12 +36,12 @@ public class PotPalDbContext : DbContext
             .HasPrincipalKey(u => u.Email);
 
         modelBuilder.Entity<CartItem>()
-            .HasKey(ci => new { ci.UserToken, ci.ItemId });
+            .HasKey(ci => new { ci.UserEmail, ci.ItemId });
 
         modelBuilder.Entity<CartItem>()
             .HasOne(ci => ci.User)
             .WithMany(u => u.CartItems)
-            .HasForeignKey(ci => ci.UserToken);
+            .HasForeignKey(ci => ci.UserEmail);
 
         modelBuilder.Entity<CartItem>()
             .HasOne(ci => ci.ShopItem)

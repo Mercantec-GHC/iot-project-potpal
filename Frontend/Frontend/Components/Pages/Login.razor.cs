@@ -11,12 +11,15 @@ namespace Frontend.Components.Pages
     {
         [Inject]
         public IUserRepo userRepo { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
         public UserLoginDTO userLogin { get; set; } = new UserLoginDTO();
 
 
         public async Task ConfirmLogin()
         {
-            await userRepo.LoginAsync(userLogin);
+            var success = await userRepo.LoginAsync(userLogin);
             StateHasChanged();
         }
     }
