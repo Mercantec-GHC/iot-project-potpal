@@ -1,0 +1,36 @@
+﻿body {
+    background-color: #1a3d20; /* Dark green shade */
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center; /* Centers text content */
+}
+
+h2 {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Set consistent image size */
+img {
+    width: 100%; /* Makes images responsive */
+    max-height: 250px; /* Set uniform height */
+    object-fit: cover; /* Ensures images are cropped properly */
+    display: block; /* Removes any unwanted spacing */
+    margin: 0 auto; /* Centers images */
+}
+
+/* Ensures row alignment */
+.row {
+    display: flex;
+    justify-content: center; /* Centers items */
+    align-items: center; /* Aligns vertically */
+    text-align: left; /* Aligns text properly */
+}
+
+/* Footer styling */
+.footer {
+    background-color: #0f2510; /* Darker shade */
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
