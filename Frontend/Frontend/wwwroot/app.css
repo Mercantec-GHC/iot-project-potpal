@@ -89,6 +89,13 @@ h1:focus {
     background-color: #f8f8f8;
 }
 
+    .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
 .item-name {
     text-align: center;
     border-radius: 4px;
@@ -217,5 +224,3 @@ h1:focus {
         margin-right: 0;
         margin-left: auto;
     }
-
-
