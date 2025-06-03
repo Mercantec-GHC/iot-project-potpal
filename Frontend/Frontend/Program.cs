@@ -12,7 +12,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient("ApiCall", client =>
 {
-    client.BaseAddress = new Uri("http://10.133.51.109:6002/api/");
+    //client.BaseAddress = new Uri("http://10.133.51.109:6002/api/");
+    client.BaseAddress = new Uri("https://localhost:7192/api/");
+
 });
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPlantRepo, PlantRepo>();
