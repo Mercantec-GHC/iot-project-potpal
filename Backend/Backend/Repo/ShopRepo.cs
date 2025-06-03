@@ -48,11 +48,16 @@ public class ShopRepo
             return "ITEM_ALREADY_IN_CART";
         }
 
+        if(cart.Quantity == null || cart.Quantity < 1)
+        {
+            cart.Quantity = 1;
+        }
+
         var cartItem = new CartItem
         {
             UserEmail = cart.UserEmail,
             ItemId = cart.ItemId,
-            Quantity = 1
+            Quantity = cart.Quantity
         };
 
         await _dbContext.CartItems.AddAsync(cartItem);

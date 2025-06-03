@@ -21,14 +21,14 @@ else
 		</div>
 		<div class="content-box-shop">
 			<div class="description-text">
-				<h1>@($"Description: {product.Price}")</h1>
+				<h1>@($"Description: {product.Description}")</h1>
 			</div>
 			<div class="price">
 				<h1>@($"{product.Price} kr.")</h1>
 			</div>
 			<div class="center-content">
 				<div class="add-to-cart">
-					<input type="number" min="1" class="quantity-input"/>
+					<input type="number" min="1" @bind="quantity" class="quantity-input"/>
 					<button class="button-centered" @onclick="AddToCart">Add to cart</button>
 				</div>
 			</div>
@@ -47,6 +47,8 @@ else
 	public int productID { get; set; }
 	public string ResponseMessage { get; set; }
 
+	public int quantity = 1;
+
 	public Models.ShopItem product;
 
 	protected override async Task OnInitializedAsync()
@@ -64,17 +66,18 @@ else
 
 	async Task AddToCart()
 	{
-		var client = ClientFactory.CreateClient("ApiCall");
 		var userEmail = "1@example.com";
+		var encodedEmail = Uri.EscapeDataString(userEmail);
+		var client = ClientFactory.CreateClient("ApiCall");
 		var itemID = product.Id;
-		User user = await client.GetFromJsonAsync<User>($"user/{userEmail}");
+		User user = await client.GetFromJsonAsync<User>($"user/{encodedEmail}");
 		CartItem cartItem = new()
 			{
 				User = user,
 				ShopItem = product,
-				UserToken = user.Token,
+				UserEmail = user.Email,
 				ItemId = itemID,
-				Quantity = 1
+				Quantity = quantity
 			};
 		var status = await client.PostAsJsonAsync($"shop/addToCart", cartItem);
 

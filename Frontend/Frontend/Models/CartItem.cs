@@ -2,7 +2,7 @@
 
 public class CartItem
 {
-    public string UserToken { get; set; } = "";
+    public string UserEmail { get; set; } = "";
     public int ItemId { get; set; }
 
     public User User { get; set; } = null!;

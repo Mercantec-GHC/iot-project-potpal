@@ -15,18 +15,19 @@
 <div class="checkout-container">
 	<div class="content-box-checkout">
 		<h3>Items in Cart</h3>
-		@if (productsInCart.Count == 0)
+		@if (cart.Count == 0)
 		{
 			<p>Loading...</p>
 		}
 		else
 		{
-			foreach (var product in productsInCart)
+			foreach (var product in cart)
 			{
 				<div class="checkout-product-in-cart">
-					<img src="@product.ImagePath" />
-					<h4 style="margin:10px">@product.ItemName</h4>
-					<p>@($"{product.Price} kr.")</p>
+					<img src="@product.ShopItem.ImagePath" />
+					<h4 style="margin:10px">@($"{product.ShopItem.ItemName}   qty: {product.Quantity}")</h4>
+
+					<p>@($"{product.ShopItem.Price * product.Quantity} kr.")</p>
 				</div>
 			}
 			<div class="d-flex justify-content-end">
@@ -45,8 +46,7 @@
 </div>
 
 @code {
-	private List<CartItem> cart = new();
-	private List<ShopItem> productsInCart = new();
+	public List<CartItem> cart = new();
 	float totalCost = 0;
 	string clientSecret = string.Empty;
 	string paymentMessage = string.Empty;
@@ -72,11 +72,9 @@
 
 					cart = await client.GetFromJsonAsync<List<CartItem>>($"Shop/cart/byUser/{encodedEmail}");
 
-					productsInCart = new();
 					totalCost = 0;
 					foreach (CartItem product in cart)
 					{
-						productsInCart.Add(product.ShopItem);
 						totalCost += product.ShopItem.Price * product.Quantity;
 					}
 
