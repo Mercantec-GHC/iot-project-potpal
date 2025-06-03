@@ -27,6 +27,7 @@
     <!-- Stripe JS loads and then triggers your custom loader -->
     <script src="https://js.stripe.com/v3/" onload="window.stripeJsLoaded = true; window.onStripeReady();"></script>
 
+
     <HeadOutlet />
 </head>
 
@@ -34,6 +35,8 @@
     <Routes @rendermode="InteractiveServer"/>
 
     <script src="_framework/blazor.web.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/sensorChart.js"></script>
 </body>
 
 </html>
