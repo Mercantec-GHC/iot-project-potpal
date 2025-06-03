@@ -16,10 +16,10 @@ public class MetricService
     private const double LightLevelTolerance = 5.0;
     private const double AirHumidityTolerance = 5.0;
 
-    public async Task<List<Metric>> GetByPlantAsync(string plantGuid)
+    public async Task<Metric?> GetByPlantAsync(string token)
     {
 
-        return await _metricRepo.GetByPlantGUIDAsync(plantGuid);
+        return await _metricRepo.GetByPlantGUIDAsync(token);
 
     }
 
@@ -139,20 +139,31 @@ public class MetricService
     }
 
 
-
-    public async Task DeleteAsync(string guid)
+    public async Task UpdateAsync(Metric metric)
     {
-        var metrics = await _metricRepo.GetByPlantGUIDAsync(guid);
-        var latest = metrics?.OrderByDescending(m => m.Timestamp).FirstOrDefault();
-
-        if (latest == null)
+        var existingMetric = await _metricRepo.GetByPlantGUIDAsync(metric.PlantGUID);
+        if (existingMetric == null)
         {
-            throw new Exception($"No metric found for GUID '{guid}'.");
+            throw new Exception($"Metric with GUID '{metric.PlantGUID}' not found.");
         }
 
-        await _metricRepo.DeleteAsync(latest);
-    }
+        existingMetric.SoilMoisture = metric.SoilMoisture;
+        existingMetric.Temperature = metric.Temperature;
+        existingMetric.AirHumidity = metric.AirHumidity;
+        existingMetric.LightLevel = metric.LightLevel;
 
+        await _metricRepo.UpdateAsync(existingMetric);
+    }
+    public async Task DeleteAsync(string guid)
+    {
+        var metric = await _metricRepo.GetByPlantGUIDAsync(guid);
+        if (metric == null)
+        {
+            throw new Exception($"Metric with GUID '{guid}' not found.");
+        }
+
+        await _metricRepo.DeleteAsync(metric);
+    }
 }
 
 
